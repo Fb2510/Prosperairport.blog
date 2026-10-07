@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="landscape">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>软路由翻墙入门：先让全家正常上网，再排查代理故障 · 阿旺</title>
+<meta name="description" content="用常见 OpenWrt 软路由接法解释 WAN、LAN、网关和 DNS，说明基础配置顺序，并排查全家断网、代理不通和只有部分设备异常的问题。">
+<meta name="keywords" content="软路由翻墙,OpenWrt配置,软路由故障排查,网关,DNS">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://prosperairport.blog/posts/openwrt-router-proxy-setup-troubleshooting/">
+<meta property="og:title" content="软路由翻墙入门：先让全家正常上网，再排查代理故障">
+<meta property="og:description" content="用常见 OpenWrt 软路由接法解释 WAN、LAN、网关和 DNS，说明基础配置顺序，并排查全家断网、代理不通和只有部分设备异常的问题。">
+<meta property="og:url" content="https://prosperairport.blog/posts/openwrt-router-proxy-setup-troubleshooting/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="阿旺">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg"><meta property="og:image:alt" content="阿旺">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="软路由翻墙入门：先让全家正常上网，再排查代理故障">
+<meta name="twitter:description" content="用常见 OpenWrt 软路由接法解释 WAN、LAN、网关和 DNS，说明基础配置顺序，并排查全家断网、代理不通和只有部分设备异常的问题。">
+<meta name="twitter:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<meta name="author" content="阿旺"><meta property="article:published_time" content="2026-10-06T02:24:07&#43;08:00"><meta property="article:modified_time" content="2026-10-06T02:30:00&#43;08:00"><meta property="article:tag" content="软路由"><meta property="article:tag" content="网络排障"><meta property="article:tag" content="翻墙">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://prosperairport.blog/posts/openwrt-router-proxy-setup-troubleshooting/#article","@type":"BlogPosting","author":{"@type":"Person","name":"阿旺"},"dateModified":"2026-10-06T02:30:00+08:00","datePublished":"2026-10-06T02:24:07+08:00","description":"用常见 OpenWrt 软路由接法解释 WAN、LAN、网关和 DNS，说明基础配置顺序，并排查全家断网、代理不通和只有部分设备异常的问题。","headline":"软路由翻墙入门：先让全家正常上网，再排查代理故障","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://prosperairport.blog/posts/openwrt-router-proxy-setup-troubleshooting/","@type":"WebPage"},"url":"https://prosperairport.blog/posts/openwrt-router-proxy-setup-troubleshooting/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://prosperairport.blog/","name":"阿旺","position":1},{"@type":"ListItem","item":"https://prosperairport.blog/posts/openwrt-router-proxy-setup-troubleshooting/","name":"软路由翻墙入门：先让全家正常上网，再排查代理故障","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/search.css"><script defer src="https://prosperairport.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/layouts.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/effects.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/reader.css">
+<link rel="icon" href="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/artalk.css"><script defer src="https://prosperairport.blog/assets/theme/artalk.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/theme.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/reader.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/viewer.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://prosperairport.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+
+</head>
+
+<body class="reader-page theme-landscape article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://prosperairport.blog/"><img src="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg" alt="" width="38" height="38"><span>阿旺</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://prosperairport.blog/">首页</a></nav>
+<a class="search-toggle" href="https://prosperairport.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="page-viewport article-viewport"><div class="page-scroll article-scroll">
+<main id="main" tabindex="-1" class="landscape-workspace theme-workspace theme-article">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://prosperairport.blog/">阿旺</a></li><li><span aria-current="page">软路由翻墙入门：先让全家正常上网，再排查代理故障</span></li></ol></nav>
+
+
+<div class="landscape-reading"><div class="landscape-scenic-strip" aria-hidden="true">
+<svg class="landscape-scene" viewBox="0 0 1440 360" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+<circle class="landscape-sun" cx="1100" cy="92" r="40" fill="var(--sun)"/>
+<path d="M0 246 160 149 263 210 465 65 628 189 810 96 993 211 1199 82 1440 212v148H0Z" fill="var(--mountain-far)"/>
+<path d="m0 278 167-49 154 51 267-125 148 113 178-71 153 77 150-133 223 125v94H0Z" fill="var(--mountain-mid)"/>
+<path d="M0 302c164-66 246 18 374-16s237 38 369 12 292-30 383 2 212-31 314-20v80H0Z" fill="var(--mountain-near)"/>
+<path d="M804 298c-77 5-60 17 14 17s77 16-50 19-138 23-80 26" fill="none" stroke="var(--river)" stroke-width="5" opacity=".7"/>
+<path d="m974 97 12-5 12 5m20-13 9-4 9 4" fill="none" stroke="var(--mountain-mid)" stroke-width="2"/>
+</svg></div><div class="landscape-journal">
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>
+行走与记述</div>
+<h1 data-pagefind-meta="title">软路由翻墙入门：先让全家正常上网，再排查代理故障</h1>
+<div class="metadata" data-pagefind-ignore><span>阿旺</span><time datetime="2026-10-06T02:24:07&#43;08:00">2026-10-06</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://prosperairport.blog/categories/router-network-troubleshooting/">软路由与排障</a></div>
+</header>
+<div class="prose"><p>软路由的吸引力，是可以在路由器上集中处理网络，让家里的设备按统一规则访问。但设置过程中，普通上网和代理访问要分开验证，才能看清故障发生在哪里。</p>
+<p>这篇以 OpenWrt 为例，解释基础接法和排查顺序。代理插件、订阅协议和设备网口不同，具体安装步骤要按对应项目文档操作。</p>
+<h2 id="heading">先认识四个名字</h2>
+<ul>
+<li><strong>WAN</strong>：软路由连接上游网络的一侧。</li>
+<li><strong>LAN</strong>：软路由连接家中设备的一侧。</li>
+<li><strong>网关</strong>：设备把访问交出去的下一站。</li>
+<li><strong>DNS</strong>：帮助设备把网站名字查成地址的服务。</li>
+</ul>
+<p>可以把软路由想成路口：先保证设备能走到路口、路口能通向外网，再检查哪些访问需要走代理。</p>
+<h2 id="heading-1">新手可以从一套清楚的接法开始</h2>
+<p>已有普通路由器时，可以先把软路由接在它后面测试：</p>
+<p>普通路由器 LAN → 软路由 WAN → 软路由 LAN → 测试电脑或无线 AP。</p>
+<p>例如，上游路由器使用 192.168.1.1，软路由 LAN 可以使用 192.168.2.1；两边采用 /24 子网时，就属于不同网段。这只是示例，修改前要检查家里现有地址，避免冲突。</p>
+<p>OpenWrt 的联网排查文档也提醒检查 LAN 与 WAN 地址范围是否冲突。更改 LAN 地址后，需要用新地址重新进入管理页面。<a href="https://openwrt.org/docs/guide-quick-start/troubleshooting_internetconnectivity">查看官方联网排查说明</a></p>
+<p>这种接法会多一层路由，涉及端口映射或部分游戏连接时可能需要额外处理。它适合先测试基础功能；如果准备让软路由直接承担主路由，还需确认运营商接入方式和设备要求。</p>
+<h2 id="heading-2">基础配置按这个顺序做</h2>
+<h3 id="1-">1. 保存原配置</h3>
+<p>记录原路由器地址、接线方式和上网设置，再下载 OpenWrt 的配置备份。LuCI 中通常可以在“系统 → 备份/升级”找到生成备份的入口，具体名称随版本变化。<a href="https://openwrt.org/docs/guide-user/troubleshooting/backup_restore">查看 OpenWrt 备份说明</a></p>
+<p>备份文件不等于完整系统镜像。代理插件是否包含额外配置，要按插件说明确认，并妥善保存订阅信息。</p>
+<h3 id="2--wan--lan">2. 接好 WAN 和 LAN</h3>
+<p>网口多的软路由，接口名称可能与机身标签不同。先在管理页面确认哪个口接上游、哪个口接电脑，别只凭接口编号猜。</p>
+<p>接在已有路由器后面时，WAN 通常可以通过 DHCP 自动取得地址。直接连接运营商线路时，则按实际要求使用 DHCP、PPPoE 或其他方式。<a href="https://openwrt.org/docs/guide-user/network/openwrt_as_routerdevice">查看 OpenWrt 路由设备说明</a></p>
+<h3 id="3-">3. 确认设备拿到正确地址</h3>
+<p>测试电脑应取得软路由 LAN 网段的地址，网关指向软路由 LAN 地址；采用由软路由提供 DNS 的配置时，DNS 也应与该配置一致。</p>
+<p>在同一局域网内，避免两台设备未经协调同时分配地址。如果普通路由器作为软路由后面的无线 AP，按它的 AP 模式说明配置，让地址分配关系保持清楚。</p>
+<p>OpenWrt 常用 Dnsmasq 提供 DNS 转发和 DHCP 地址分配。改完相关设置后，可以重新连接 Wi-Fi 或更新设备网络连接，再检查拿到的新设置。<a href="https://openwrt.org/docs/guide-user/base-system/dhcp.dnsmasq">查看 DHCP 与 DNS 说明</a></p>
+<h3 id="4-">4. 先验证普通上网，再配置代理</h3>
+<p>保持代理插件暂停，测试普通网页，确认网关、上游网络和基础 DNS 正常。</p>
+<p>然后按插件文档导入适配订阅、选择节点和启用规则，使用同一台测试设备访问需要代理的网站。确认能用后，再让更多家庭设备接入。</p>
+<h2 id="heading-3">全家突然断网，先这样检查</h2>
+<p>先暂停代理插件，测试普通网页。如果仍然不通，检查 WAN 状态、网线和上游路由器。</p>
+<p>如果电脑也打不开软路由管理页面，先检查电脑地址、LAN 接线，以及管理地址是否已经修改。不要连续改 DNS 来处理所有问题，连不上管理页面时，问题可能还没有到域名解析这一步。</p>
+<h2 id="heading-4">普通网页能打开，代理网站不行</h2>
+<p>依次检查订阅是否有效、是否选中了可用节点、规则是否把目标网站送往代理，以及插件日志里有没有连接或解析错误。</p>
+<p>还可以在手机上用同一家机场单独测试。为了看清结果，暂时只保留一层代理，并尽量使用相同网络和节点。手机可用而软路由不可用时，重点比较配置和插件兼容性。</p>
+<h2 id="heading-5">只有部分设备有问题</h2>
+<p>先比较正常设备与异常设备的网关、DNS 和客户端代理设置，再重新连接网络测试。</p>
+<p>如果怀疑 IPv6，要确认异常设备是否通过另一条路径访问，以及插件是否处理了相关流量。可以做临时对比，记录结果后恢复设置；永久关闭 IPv6 不能替代查明原因。<a href="https://openwrt.org/docs/guide-user/network/ipv6/troubleshooting">查看 OpenWrt IPv6 排障说明</a></p>
+<h2 id="heading-6">留一条恢复上网的路</h2>
+<p>保存接线照片、管理地址和修改记录，每次只调整一项。出现问题时，先恢复此前能正常上网的基础配置，再继续检查代理。</p>
+<p>求助时提供软路由型号、OpenWrt 与插件版本、简单接线图和错误信息。订阅链接、宽带账号及备份文件中的凭据要遮住。清楚的网络关系，比一大堆未经核对的参数更有帮助。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://prosperairport.blog/tags/soft-router/"># 软路由</a><a href="https://prosperairport.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://prosperairport.blog/tags/proxy-access/"># 翻墙</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://prosperairport.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/">← 上一篇</a><a href="https://prosperairport.blog/posts/shadowrocket-beginner-subscription-troubleshooting/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+</div><div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">先认识四个名字</a><a class="level-2" href="#heading-1">新手可以从一套清楚的接法开始</a><a class="level-2" href="#heading-2">基础配置按这个顺序做</a><a class="level-3" href="#1-">1. 保存原配置</a><a class="level-3" href="#2--wan--lan">2. 接好 WAN 和 LAN</a><a class="level-3" href="#3-">3. 确认设备拿到正确地址</a><a class="level-3" href="#4-">4. 先验证普通上网，再配置代理</a><a class="level-2" href="#heading-3">全家突然断网，先这样检查</a><a class="level-2" href="#heading-4">普通网页能打开，代理网站不行</a><a class="level-2" href="#heading-5">只有部分设备有问题</a><a class="level-2" href="#heading-6">留一条恢复上网的路</a></nav></aside>
+</div></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场</a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧</a></nav>
+<span>© 2026阿旺的博客</span>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://prosperairport.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://prosperairport.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://prosperairport.blog/pagefind/" base-url="https://prosperairport.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/aeb18626-7dc1-4e01-ad96-a08c0baa169f/","pageTitle":"软路由翻墙入门：先让全家正常上网，再排查代理故障","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-307c7cfb-e43f-427e-96be-62becaa676a8","views":true,"viewsBase":0}</script>
+
+</body>
+</html>
