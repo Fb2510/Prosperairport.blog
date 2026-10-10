@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="landscape">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>软路由重启后不能翻墙，手动启动才恢复？检查开机自启 · 阿旺</title>
+<meta name="description" content="软路由重启后代理没有恢复，先分清“允许开机启动”和“服务正在运行”。本文以 OpenWrt 为例，说明如何检查自启、比较手动启动结果，以及在再次重启前保留日志。">
+<meta name="keywords" content="软路由代理自启,OpenWrt重启,开机启动,翻墙故障排查">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://prosperairport.blog/posts/daily-2026-10-10-02-openwrt-proxy-autostart-after-reboot/">
+<meta property="og:title" content="软路由重启后不能翻墙，手动启动才恢复？检查开机自启">
+<meta property="og:description" content="软路由重启后代理没有恢复，先分清“允许开机启动”和“服务正在运行”。本文以 OpenWrt 为例，说明如何检查自启、比较手动启动结果，以及在再次重启前保留日志。">
+<meta property="og:url" content="https://prosperairport.blog/posts/daily-2026-10-10-02-openwrt-proxy-autostart-after-reboot/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="阿旺">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg"><meta property="og:image:alt" content="阿旺">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="软路由重启后不能翻墙，手动启动才恢复？检查开机自启">
+<meta name="twitter:description" content="软路由重启后代理没有恢复，先分清“允许开机启动”和“服务正在运行”。本文以 OpenWrt 为例，说明如何检查自启、比较手动启动结果，以及在再次重启前保留日志。">
+<meta name="twitter:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<meta name="author" content="阿旺"><meta property="article:published_time" content="2026-10-10T09:02:50&#43;08:00"><meta property="article:modified_time" content="2026-10-10T09:03:27&#43;08:00"><meta property="article:tag" content="软路由"><meta property="article:tag" content="网络排障"><meta property="article:tag" content="翻墙">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://prosperairport.blog/posts/daily-2026-10-10-02-openwrt-proxy-autostart-after-reboot/#article","@type":"BlogPosting","author":{"@type":"Person","name":"阿旺"},"dateModified":"2026-10-10T09:03:27+08:00","datePublished":"2026-10-10T09:02:50+08:00","description":"软路由重启后代理没有恢复，先分清“允许开机启动”和“服务正在运行”。本文以 OpenWrt 为例，说明如何检查自启、比较手动启动结果，以及在再次重启前保留日志。","headline":"软路由重启后不能翻墙，手动启动才恢复？检查开机自启","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://prosperairport.blog/posts/daily-2026-10-10-02-openwrt-proxy-autostart-after-reboot/","@type":"WebPage"},"url":"https://prosperairport.blog/posts/daily-2026-10-10-02-openwrt-proxy-autostart-after-reboot/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://prosperairport.blog/","name":"阿旺","position":1},{"@type":"ListItem","item":"https://prosperairport.blog/posts/daily-2026-10-10-02-openwrt-proxy-autostart-after-reboot/","name":"软路由重启后不能翻墙，手动启动才恢复？检查开机自启","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/search.css"><script defer src="https://prosperairport.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/layouts.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/effects.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/reader.css">
+<link rel="icon" href="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/artalk.css"><script defer src="https://prosperairport.blog/assets/theme/artalk.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/theme.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/reader.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/viewer.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://prosperairport.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3YZ8BC7G6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Q3YZ8BC7G6');
+</script>
+
+<script defer src="https://prosperairport.blog/assets/xblog/google-analytics.js" data-xblog-google-analytics="G-Q3YZ8BC7G6" data-site-hosts="prosperairport.blog,www.prosperairport.blog"></script></head>
+
+<body class="reader-page theme-landscape article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://prosperairport.blog/"><img src="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg" alt="" width="38" height="38"><span>阿旺</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://prosperairport.blog/">首页</a></nav>
+<a class="search-toggle" href="https://prosperairport.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="page-viewport article-viewport"><div class="page-scroll article-scroll">
+<main id="main" tabindex="-1" class="landscape-workspace theme-workspace theme-article">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://prosperairport.blog/">阿旺</a></li><li><span aria-current="page">软路由重启后不能翻墙，手动启动才恢复？检查开机自启</span></li></ol></nav>
+
+
+<div class="landscape-reading"><div class="landscape-scenic-strip" aria-hidden="true">
+<svg class="landscape-scene" viewBox="0 0 1440 360" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+<circle class="landscape-sun" cx="1100" cy="92" r="40" fill="var(--sun)"/>
+<path d="M0 246 160 149 263 210 465 65 628 189 810 96 993 211 1199 82 1440 212v148H0Z" fill="var(--mountain-far)"/>
+<path d="m0 278 167-49 154 51 267-125 148 113 178-71 153 77 150-133 223 125v94H0Z" fill="var(--mountain-mid)"/>
+<path d="M0 302c164-66 246 18 374-16s237 38 369 12 292-30 383 2 212-31 314-20v80H0Z" fill="var(--mountain-near)"/>
+<path d="M804 298c-77 5-60 17 14 17s77 16-50 19-138 23-80 26" fill="none" stroke="var(--river)" stroke-width="5" opacity=".7"/>
+<path d="m974 97 12-5 12 5m20-13 9-4 9 4" fill="none" stroke="var(--mountain-mid)" stroke-width="2"/>
+</svg></div><div class="landscape-journal">
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>
+行走与记述</div>
+<h1 data-pagefind-meta="title">软路由重启后不能翻墙，手动启动才恢复？检查开机自启</h1>
+<div class="metadata" data-pagefind-ignore><span>阿旺</span><time datetime="2026-10-10T09:02:50&#43;08:00">2026-10-10</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://prosperairport.blog/categories/router-network-troubleshooting/">软路由与排障</a></div>
+</header>
+<div class="prose"><p>软路由平时能翻墙，一重启就失效，进入后台手动启动代理插件后又恢复。遇到这种情况，可以先检查开机自启，再看开机时是否有启动错误。</p>
+<p>本文以 OpenWrt 和 LuCI 网页管理界面为例。代理插件的名称、按钮和服务对应关系各不相同，具体配置要以所用插件的官方文档为准。</p>
+<h2 id="heading">先分清两件事：允许启动和已经启动</h2>
+<p><strong>开机自启</strong>表示系统启动时允许尝试启动这个服务。</p>
+<p><strong>正在运行</strong>表示它此刻确实在工作。</p>
+<p>一个服务可能允许开机自启，但本次启动失败；也可能当前是你手动启动的，却没有设置下次开机自启。OpenWrt 的服务管理文档将 <code>enable</code>、<code>start</code>、<code>enabled</code> 和 <code>running</code> 分别列为不同操作或检查项。<a href="https://openwrt.org/docs/guide-user/base-system/managing_services">查看官方服务管理说明</a></p>
+<p>因此，手动点“启动”后能用，并不能直接证明自启设置正确。</p>
+<h2 id="heading-1">第一步：先确认基础网络恢复了</h2>
+<p>重启后先等待路由器和上游设备完成启动，再用一台测试设备访问平时可以直连的普通网站。</p>
+<p>如果代理插件已经尝试启动，但普通网站也不通，可以通过插件提供的暂停方式做一次对比，同时查看上游连接是否正常。WAN 就是软路由通向外部网络的一侧。</p>
+<p>如果基础联网尚未恢复，先处理这一层。只用一个需要翻墙的网站测试，很难区分“网络还没好”和“代理没有启动”。</p>
+<p>记下三个时间：路由器重启、普通网页恢复、手动启动代理。后面查看日志时，这条时间顺序很有用。</p>
+<h2 id="heading-2">第二步：核对实际的自启状态</h2>
+<p>可以先在代理插件自己的页面查找启用或开机启动选项，核对该插件文档中的说明。</p>
+<p>如果文档确认它对应一个 OpenWrt 系统服务，再进入 LuCI 的“系统 → 启动”，找到那个服务。不要根据名称相似就修改陌生服务；有些插件的主开关还会影响启动行为，系统列表只能说明其中一层。</p>
+<p>这里容易看错的是“已启用/Enabled”：</p>
+<ul>
+<li>它通常表示自启已允许，并不表示代理内核现在运行正常。</li>
+<li>“启动/Start”用于立即尝试启动，是另一项操作。</li>
+<li>如果确认自启处于禁用状态，可以启用对应服务；随后仍要检查实际运行结果。</li>
+</ul>
+<p>LuCI 项目的启动页面源码也把“启用/禁用”和“启动/重启/停止”分成了不同按钮。<a href="https://github.com/openwrt/luci/blob/master/modules/luci-mod-system/htdocs/luci-static/resources/view/system/startup.js">查看 LuCI 启动页面的项目资料</a></p>
+<p>只调整已确认的代理服务即可。网络等基础服务关系到后台访问，不要顺手一起停用。</p>
+<h2 id="heading-3">第三步：自启已允许，为什么仍然失败？</h2>
+<p>此时先看日志。重点找开机后第一次尝试启动代理的记录，再与手动启动成功时比较。</p>
+<p>可以关注这些方向，但都需要实际错误佐证：</p>
+<table>
+<thead>
+<tr>
+<th>日志或现象</th>
+<th>下一步核对</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>提示配置读取或解析失败</td>
+<td>当前选中的配置、文件是否存在、插件是否支持其格式</td>
+</tr>
+<tr>
+<td>获取订阅失败，稍后手动更新才成功</td>
+<td>当时的联网与域名解析、订阅地址和有效期</td>
+</tr>
+<tr>
+<td>服务启动后很快退出</td>
+<td>退出前后的错误，以及插件和内核版本</td>
+</tr>
+<tr>
+<td>等普通上网恢复后，手动启动就成功</td>
+<td>比较联网恢复与首次启动的顺序</td>
+</tr>
+<tr>
+<td>服务显示运行，代理网站仍失败</td>
+<td>实际节点、规则及连接错误，不能只看运行标志</td>
+</tr>
+</tbody>
+</table>
+<p>“稍后手动启动能用”可以作为排查启动时机的线索，但不能据此认定只需固定延迟几秒。不同拨号方式、插件重试机制和配置加载方式都可能影响结果。</p>
+<p>如果插件确实提供等待网络、失败重试或延迟启动功能，先核对其官方说明，再一次调整一项。不要直接复制陌生的开机脚本。</p>
+<h2 id="heading-4">第四步：再次重启前，先保存日志</h2>
+<p>查看插件日志和 LuCI 的“系统日志”页面；页面位置可能随固件和界面变化。熟悉命令行的用户也可以用 <code>logread</code> 查看 OpenWrt 系统日志。</p>
+<p>OpenWrt 的默认日志通常保存在内存中的环形缓冲区，容量有限，重启后也不能指望保留上一次的完整记录。因此，应在再次重启前复制故障附近的日志。<a href="https://openwrt.org/docs/guide-user/base-system/log.essentials">查看官方日志说明</a></p>
+<p>如果日志日期明显不对，先记下这一现象，并检查系统时间同步。OpenWrt 的 NTP 文档说明了通过网络同步时间的方法；这里的 NTP 可以理解成联网对时。<a href="https://openwrt.org/docs/guide-user/services/ntp/client-server">查看时间同步说明</a></p>
+<p>分享日志前，遮挡订阅链接、节点密码和其他凭据。</p>
+<h2 id="heading-5">最后做一次完整的重启验证</h2>
+<p>保存设置后，在方便短暂中断家庭网络的时间进行正常重启。保持同一台测试设备、相同网络和相同测试网页，记录：</p>
+<ol>
+<li>普通上网是否自行恢复。</li>
+<li>代理服务是否自行启动，日志是否还有原错误。</li>
+<li>需要代理的网站是否恢复，而不是只看“运行中”三个字。</li>
+<li>整个过程是否还需要手动点启动。</li>
+</ol>
+<p>如果仍然复发，把自启状态、开机失败日志和稍后成功日志放在一起求助。这样的对照更容易解释问题，也能让后续调整有依据。</p>
+<p>资料核对日期：2026 年 10 月 10 日。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://prosperairport.blog/tags/soft-router/"># 软路由</a><a href="https://prosperairport.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://prosperairport.blog/tags/proxy-access/"># 翻墙</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://prosperairport.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/">← 上一篇</a><a href="https://prosperairport.blog/posts/daily-2026-10-10-01-windows-proxy-left-after-clash-exit/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+</div><div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">先分清两件事：允许启动和已经启动</a><a class="level-2" href="#heading-1">第一步：先确认基础网络恢复了</a><a class="level-2" href="#heading-2">第二步：核对实际的自启状态</a><a class="level-2" href="#heading-3">第三步：自启已允许，为什么仍然失败？</a><a class="level-2" href="#heading-4">第四步：再次重启前，先保存日志</a><a class="level-2" href="#heading-5">最后做一次完整的重启验证</a></nav></aside>
+</div></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场</a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧</a></nav>
+<span>© 2026阿旺的博客</span>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://prosperairport.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://prosperairport.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://prosperairport.blog/pagefind/" base-url="https://prosperairport.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/16d693f2-23c1-4316-a874-5a29c704903f/","pageTitle":"软路由重启后不能翻墙，手动启动才恢复？检查开机自启","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-307c7cfb-e43f-427e-96be-62becaa676a8","views":true,"viewsBase":0}</script>
+
+</body>
+</html>
