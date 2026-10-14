@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="landscape">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenWrt 升级后代理插件不见了？先分清软件和配置 · 阿旺</title>
+<meta name="description" content="OpenWrt 升级后代理菜单不见了，先核对插件是否仍然安装，再检查配置是否保留。本文解释配置备份、软件包清单与定制固件的区别，并给出新手可以照着检查的恢复顺序。">
+<meta name="keywords" content="OpenWrt升级,代理插件恢复,软路由配置备份,翻墙排障">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://prosperairport.blog/posts/daily-2026-10-14-01-openwrt-upgrade-proxy-package-config-recovery/">
+<meta property="og:title" content="OpenWrt 升级后代理插件不见了？先分清软件和配置">
+<meta property="og:description" content="OpenWrt 升级后代理菜单不见了，先核对插件是否仍然安装，再检查配置是否保留。本文解释配置备份、软件包清单与定制固件的区别，并给出新手可以照着检查的恢复顺序。">
+<meta property="og:url" content="https://prosperairport.blog/posts/daily-2026-10-14-01-openwrt-upgrade-proxy-package-config-recovery/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="阿旺">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg"><meta property="og:image:alt" content="阿旺">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenWrt 升级后代理插件不见了？先分清软件和配置">
+<meta name="twitter:description" content="OpenWrt 升级后代理菜单不见了，先核对插件是否仍然安装，再检查配置是否保留。本文解释配置备份、软件包清单与定制固件的区别，并给出新手可以照着检查的恢复顺序。">
+<meta name="twitter:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<meta name="author" content="阿旺"><meta property="article:published_time" content="2026-10-14T00:53:34&#43;08:00"><meta property="article:modified_time" content="2026-10-14T00:53:43&#43;08:00"><meta property="article:tag" content="软路由"><meta property="article:tag" content="网络排障"><meta property="article:tag" content="翻墙">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://prosperairport.blog/posts/daily-2026-10-14-01-openwrt-upgrade-proxy-package-config-recovery/#article","@type":"BlogPosting","author":{"@type":"Person","name":"阿旺"},"dateModified":"2026-10-14T00:53:43+08:00","datePublished":"2026-10-14T00:53:34+08:00","description":"OpenWrt 升级后代理菜单不见了，先核对插件是否仍然安装，再检查配置是否保留。本文解释配置备份、软件包清单与定制固件的区别，并给出新手可以照着检查的恢复顺序。","headline":"OpenWrt 升级后代理插件不见了？先分清软件和配置","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://prosperairport.blog/posts/daily-2026-10-14-01-openwrt-upgrade-proxy-package-config-recovery/","@type":"WebPage"},"url":"https://prosperairport.blog/posts/daily-2026-10-14-01-openwrt-upgrade-proxy-package-config-recovery/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://prosperairport.blog/","name":"阿旺","position":1},{"@type":"ListItem","item":"https://prosperairport.blog/posts/daily-2026-10-14-01-openwrt-upgrade-proxy-package-config-recovery/","name":"OpenWrt 升级后代理插件不见了？先分清软件和配置","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/search.css"><script defer src="https://prosperairport.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/layouts.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/effects.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/reader.css">
+<link rel="icon" href="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/artalk.css"><script defer src="https://prosperairport.blog/assets/theme/artalk.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/theme.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/reader.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/viewer.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://prosperairport.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3YZ8BC7G6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Q3YZ8BC7G6');
+</script>
+
+<script defer src="https://prosperairport.blog/assets/xblog/google-analytics.js" data-xblog-google-analytics="G-Q3YZ8BC7G6" data-site-hosts="prosperairport.blog,www.prosperairport.blog"></script></head>
+
+<body class="reader-page theme-landscape article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://prosperairport.blog/"><img src="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg" alt="" width="38" height="38"><span>阿旺</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://prosperairport.blog/">首页</a></nav>
+<a class="search-toggle" href="https://prosperairport.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="page-viewport article-viewport"><div class="page-scroll article-scroll">
+<main id="main" tabindex="-1" class="landscape-workspace theme-workspace theme-article">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://prosperairport.blog/">阿旺</a></li><li><span aria-current="page">OpenWrt 升级后代理插件不见了？先分清软件和配置</span></li></ol></nav>
+
+
+<div class="landscape-reading"><div class="landscape-scenic-strip" aria-hidden="true">
+<svg class="landscape-scene" viewBox="0 0 1440 360" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+<circle class="landscape-sun" cx="1100" cy="92" r="40" fill="var(--sun)"/>
+<path d="M0 246 160 149 263 210 465 65 628 189 810 96 993 211 1199 82 1440 212v148H0Z" fill="var(--mountain-far)"/>
+<path d="m0 278 167-49 154 51 267-125 148 113 178-71 153 77 150-133 223 125v94H0Z" fill="var(--mountain-mid)"/>
+<path d="M0 302c164-66 246 18 374-16s237 38 369 12 292-30 383 2 212-31 314-20v80H0Z" fill="var(--mountain-near)"/>
+<path d="M804 298c-77 5-60 17 14 17s77 16-50 19-138 23-80 26" fill="none" stroke="var(--river)" stroke-width="5" opacity=".7"/>
+<path d="m974 97 12-5 12 5m20-13 9-4 9 4" fill="none" stroke="var(--mountain-mid)" stroke-width="2"/>
+</svg></div><div class="landscape-journal">
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>
+行走与记述</div>
+<h1 data-pagefind-meta="title">OpenWrt 升级后代理插件不见了？先分清软件和配置</h1>
+<div class="metadata" data-pagefind-ignore><span>阿旺</span><time datetime="2026-10-14T00:53:34&#43;08:00">2026-10-14</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://prosperairport.blog/categories/router-network-troubleshooting/">软路由与排障</a></div>
+</header>
+<div class="prose"><p>OpenWrt 升级后，普通上网恢复了，翻墙插件的菜单却不见了，可以先检查插件是否仍然安装，再查看原配置。反复上传配置备份，不一定能把缺少的软件带回来。</p>
+<p>本文以 OpenWrt 的常规固件升级为例。第三方固件、代理插件及定制升级方式可能有不同处理，恢复前要核对实际使用的项目说明。</p>
+<h2 id="heading">为什么“保留配置”之后，插件仍可能消失？</h2>
+<p>先分清三样东西：</p>
+<table>
+<thead>
+<tr>
+<th>内容</th>
+<th>可以理解成什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>软件包</td>
+<td>插件和相关程序本身</td>
+</tr>
+<tr>
+<td>配置文件</td>
+<td>程序运行时读取的设置</td>
+</tr>
+<tr>
+<td>软件包清单</td>
+<td>之前安装过哪些软件的名单</td>
+</tr>
+</tbody>
+</table>
+<p>OpenWrt 的官方说明指出，用户自行安装的软件包默认不会在普通固件升级中保留下来。保存配置与重新安装这些软件，是需要分别确认的事情。<a href="https://openwrt.org/docs/guide-user/installation/sysupgrade.packages">查看官方的软件包保留说明</a></p>
+<p>因此，配置文件可能还在，但读取它的程序已经不在新固件里。具体到某个插件，还要看它是否随新固件预装、是否由其他升级工具重新包含。</p>
+<p>同样，保存了软件包清单，只是方便之后核对安装内容。OpenWrt 的升级程序将这项功能明确描述为保存“已安装软件包的列表”，并不是把每个程序都装进配置备份。<a href="https://github.com/openwrt/openwrt/blob/master/package/base-files/files/sbin/sysupgrade">查看官方升级程序的说明</a></p>
+<h2 id="heading-1">第一步：先保存现在的状态，确认普通上网</h2>
+<p>记下软路由型号、升级前后的固件名称与版本，以及原插件名称。保留已有的旧备份，不要用新备份覆盖唯一一份旧文件。</p>
+<p>再保存一份当前配置，方便比较。LuCI 的“系统 → 备份/升级”页面提供生成配置归档的入口，名称可能随界面语言变化。官方 LuCI 将这项操作描述为下载当前配置文件的归档。<a href="https://github.com/openwrt/luci/blob/master/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js">查看 LuCI 备份页面的项目资料</a></p>
+<p>使用一台测试设备打开平时可以直连的普通网站。如果普通上网也失败，先检查管理地址、上游连接和基础网络；此时只测试需要翻墙的网站，无法分清哪一层出了问题。</p>
+<h2 id="heading-2">第二步：查插件的安装状态，别只看菜单</h2>
+<p>在固件的软件管理或插件提供的状态入口，核对原插件是否安装。菜单入口消失是一个现象，不能直接证明全部配置都已删除。</p>
+<p>可以按下面的情况继续：</p>
+<ul>
+<li><strong>确认软件没有安装：</strong> 查原项目是否支持当前固件，再按对应说明安装兼容的软件与依赖。</li>
+<li><strong>软件显示已安装，但菜单没有出现：</strong> 核对网页管理组件及项目的相关故障说明，记录错误。</li>
+<li><strong>插件页面能打开，但服务不能运行：</strong> 先看启动错误，确认实际缺少什么或哪里不兼容。</li>
+</ul>
+<p>这里没有一种适合所有插件的安装命令。固件版本、设备架构和软件来源要匹配；不要只因为文件名相似，就把升级前的安装包直接装回去。</p>
+<p>页面重新出现，只说明界面这一部分恢复了，还需要继续验证服务和访问。</p>
+<h2 id="heading-3">第三步：再检查配置是否保留、是否适配</h2>
+<p>程序恢复后，查看原订阅、当前配置、节点与规则是否仍能读取。不要一开始就删除所有配置、重新导入整套内容。</p>
+<p>OpenWrt 的备份会按指定文件范围保存内容，不能默认认为某个代理插件的所有额外文件都在里面。LuCI 提供“查看当前备份文件列表”的功能，可以核对实际包含哪些文件。<a href="https://github.com/openwrt/luci/blob/master/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js">查看备份文件列表的项目说明</a></p>
+<p>如果配置缺失，先对照旧备份和插件自己的导出文件，再按插件文档恢复必要部分。如果文件存在但加载报错，则查看新版本的兼容或迁移说明。</p>
+<p>上传整份旧系统配置前，还要确认它适用于当前设备和升级路径。LuCI 的恢复提示说明，恢复后可能重启；若 LAN 地址被旧配置改变，管理连接也可能需要重新建立。LAN 就是家中设备连接软路由的一侧。</p>
+<p>所以，仅为了找回代理设置时，应先检查插件提供的恢复方式，避免把已经恢复正常的网络设置一起改回去。</p>
+<h2 id="heading-4">第四步：确认服务运行，再测试真正需要的访问</h2>
+<p>保持同一台测试设备，分别检查：</p>
+<ol>
+<li>普通网页能否打开。</li>
+<li>插件能否加载配置，日志是否仍有错误。</li>
+<li>当前节点是否可以完成目标网页或应用的访问。</li>
+<li>有开机自启需求时，按插件文档核对相应状态。</li>
+</ol>
+<p>每次只恢复一部分，恢复后重新发起访问。别只看“运行中”或节点旁的延迟数字，就当作翻墙功能已经恢复。</p>
+<p>求助时提供固件与插件版本、安装状态、配置加载结果和经过遮挡的错误信息。订阅链接、节点密码、宽带账号和备份文件中的凭据不要公开。</p>
+<h2 id="heading-5">下次升级前，准备什么更容易恢复？</h2>
+<p>可以把这些资料放在自己妥善保管的位置：</p>
+<ul>
+<li>带日期的系统配置备份。</li>
+<li>实际备份文件列表，以及插件要求另存的配置或文件。</li>
+<li>软件包清单、插件名称与版本、原始项目链接。</li>
+<li>当前接线、管理地址和能够恢复普通上网的设置记录。</li>
+</ul>
+<p>如果准备使用 Attended Sysupgrade，也就是按软件包清单构建新固件的定制升级方式，先核对它能生成的固件与软件包结果。OpenWrt 的 ASU 项目说明了请求包含所选软件包的固件这一机制。<a href="https://github.com/openwrt/asu">查看官方定制升级项目</a></p>
+<p>这与单纯下载普通固件升级不同，也不能仅凭工具名称就认定所有第三方代理插件一定会被包含。</p>
+<p>把“程序在不在”和“配置能不能用”分开检查，升级后的恢复过程会清楚很多。先保住基础联网，再恢复代理软件和必要配置，最后验证实际访问。</p>
+<p>资料核对日期：2026 年 10 月 14 日。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://prosperairport.blog/tags/soft-router/"># 软路由</a><a href="https://prosperairport.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://prosperairport.blog/tags/proxy-access/"># 翻墙</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://prosperairport.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/">← 上一篇</a><a href="https://prosperairport.blog/posts/daily-2026-10-12-02-browser-works-other-apps-proxy-entry/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+</div><div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">为什么“保留配置”之后，插件仍可能消失？</a><a class="level-2" href="#heading-1">第一步：先保存现在的状态，确认普通上网</a><a class="level-2" href="#heading-2">第二步：查插件的安装状态，别只看菜单</a><a class="level-2" href="#heading-3">第三步：再检查配置是否保留、是否适配</a><a class="level-2" href="#heading-4">第四步：确认服务运行，再测试真正需要的访问</a><a class="level-2" href="#heading-5">下次升级前，准备什么更容易恢复？</a></nav></aside>
+</div></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场</a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧</a></nav>
+<span>© 2026阿旺的博客</span>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://prosperairport.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://prosperairport.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://prosperairport.blog/pagefind/" base-url="https://prosperairport.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/670783be-64cd-4eb1-9221-2bd7a4285a03/","pageTitle":"OpenWrt 升级后代理插件不见了？先分清软件和配置","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-307c7cfb-e43f-427e-96be-62becaa676a8","views":true,"viewsBase":0}</script>
+
+</body>
+</html>
