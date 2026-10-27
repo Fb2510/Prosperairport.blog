@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="landscape">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>自动选节点，为什么没换到延迟最低的那条？ · 阿旺</title>
+<meta name="description" content="自动组没有选中延迟最低的节点怎么办？从手动与自动组的区别、tolerance 切换容差、测试时间和固定选择检查原因，并区分正常保留与节点不可用。">
+<meta name="keywords" content="自动选择节点,切换容差,Clash自动选择,url-test,翻墙排障">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://prosperairport.blog/posts/daily-2026-10-27-01-auto-selection-latency-tolerance/">
+<meta property="og:title" content="自动选节点，为什么没换到延迟最低的那条？">
+<meta property="og:description" content="自动组没有选中延迟最低的节点怎么办？从手动与自动组的区别、tolerance 切换容差、测试时间和固定选择检查原因，并区分正常保留与节点不可用。">
+<meta property="og:url" content="https://prosperairport.blog/posts/daily-2026-10-27-01-auto-selection-latency-tolerance/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="阿旺">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg"><meta property="og:image:alt" content="阿旺">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自动选节点，为什么没换到延迟最低的那条？">
+<meta name="twitter:description" content="自动组没有选中延迟最低的节点怎么办？从手动与自动组的区别、tolerance 切换容差、测试时间和固定选择检查原因，并区分正常保留与节点不可用。">
+<meta name="twitter:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<meta name="author" content="阿旺"><meta property="article:published_time" content="2026-10-27T09:02:41&#43;08:00"><meta property="article:modified_time" content="2026-10-27T09:02:44&#43;08:00"><meta property="article:tag" content="Clash"><meta property="article:tag" content="网络排障"><meta property="article:tag" content="翻墙">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://prosperairport.blog/posts/daily-2026-10-27-01-auto-selection-latency-tolerance/#article","@type":"BlogPosting","author":{"@type":"Person","name":"阿旺"},"dateModified":"2026-10-27T09:02:44+08:00","datePublished":"2026-10-27T09:02:41+08:00","description":"自动组没有选中延迟最低的节点怎么办？从手动与自动组的区别、tolerance 切换容差、测试时间和固定选择检查原因，并区分正常保留与节点不可用。","headline":"自动选节点，为什么没换到延迟最低的那条？","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://prosperairport.blog/posts/daily-2026-10-27-01-auto-selection-latency-tolerance/","@type":"WebPage"},"url":"https://prosperairport.blog/posts/daily-2026-10-27-01-auto-selection-latency-tolerance/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://prosperairport.blog/","name":"阿旺","position":1},{"@type":"ListItem","item":"https://prosperairport.blog/posts/daily-2026-10-27-01-auto-selection-latency-tolerance/","name":"自动选节点，为什么没换到延迟最低的那条？","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/search.css"><script defer src="https://prosperairport.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/layouts.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/effects.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/reader.css">
+<link rel="icon" href="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/artalk.css"><script defer src="https://prosperairport.blog/assets/theme/artalk.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/theme.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/reader.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/viewer.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://prosperairport.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3YZ8BC7G6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Q3YZ8BC7G6');
+</script>
+
+<script defer src="https://prosperairport.blog/assets/xblog/google-analytics.js" data-xblog-google-analytics="G-Q3YZ8BC7G6" data-site-hosts="prosperairport.blog,www.prosperairport.blog"></script></head>
+
+<body class="reader-page theme-landscape article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://prosperairport.blog/"><img src="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg" alt="" width="38" height="38"><span>阿旺</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://prosperairport.blog/">首页</a></nav>
+<a class="search-toggle" href="https://prosperairport.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="page-viewport article-viewport"><div class="page-scroll article-scroll">
+<main id="main" tabindex="-1" class="landscape-workspace theme-workspace theme-article">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://prosperairport.blog/">阿旺</a></li><li><span aria-current="page">自动选节点，为什么没换到延迟最低的那条？</span></li></ol></nav>
+
+
+<div class="landscape-reading"><div class="landscape-scenic-strip" aria-hidden="true">
+<svg class="landscape-scene" viewBox="0 0 1440 360" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+<circle class="landscape-sun" cx="1100" cy="92" r="40" fill="var(--sun)"/>
+<path d="M0 246 160 149 263 210 465 65 628 189 810 96 993 211 1199 82 1440 212v148H0Z" fill="var(--mountain-far)"/>
+<path d="m0 278 167-49 154 51 267-125 148 113 178-71 153 77 150-133 223 125v94H0Z" fill="var(--mountain-mid)"/>
+<path d="M0 302c164-66 246 18 374-16s237 38 369 12 292-30 383 2 212-31 314-20v80H0Z" fill="var(--mountain-near)"/>
+<path d="M804 298c-77 5-60 17 14 17s77 16-50 19-138 23-80 26" fill="none" stroke="var(--river)" stroke-width="5" opacity=".7"/>
+<path d="m974 97 12-5 12 5m20-13 9-4 9 4" fill="none" stroke="var(--mountain-mid)" stroke-width="2"/>
+</svg></div><div class="landscape-journal">
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>
+行走与记述</div>
+<h1 data-pagefind-meta="title">自动选节点，为什么没换到延迟最低的那条？</h1>
+<div class="metadata" data-pagefind-ignore><span>阿旺</span><time datetime="2026-10-27T09:02:41&#43;08:00">2026-10-27</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://prosperairport.blog/categories/proxy-client-guides/">客户端教程</a></div>
+</header>
+<div class="prose"><p>自动选节点后，列表里明明有更小的延迟数字，当前节点却没有变化，不一定是客户端失灵。先确认正在使用哪一种策略，再看它是否设置了“切换容差”。</p>
+<p>本文适用于使用 Mihomo 内核的 Clash 类客户端，讨论的是自动选择组的判断方式。不同客户端的按钮和菜单可能不同，不能把下面的参数说明直接套到所有代理软件。</p>
+<h2 id="heading">先认清：组名叫“自动”，不代表类型就是自动</h2>
+<p>策略组可以理解成一份候选名单，再加上一套选人办法。配置中的名称和类型是两回事，名字可以由配置提供方填写。</p>
+<p>先查看当前配置或请提供方确认：</p>
+<table>
+<thead>
+<tr>
+<th>实际类型</th>
+<th>怎样理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>select</code></td>
+<td>手动选择，由你指定其中一个成员</td>
+</tr>
+<tr>
+<td><code>url-test</code></td>
+<td>根据健康检查结果进行自动选择</td>
+</tr>
+</tbody>
+</table>
+<p>手动组也可以包含一个自动组。如果外层手动组仍选着某条固定节点，里面的自动组即使换了节点，也不能据此认定这次访问会跟着变。<a href="https://wiki.metacubex.one/config/proxy-groups/select/">Mihomo 手动选择示例</a>与<a href="https://wiki.metacubex.one/config/proxy-groups/">代理组字段说明</a>展示了类型、名称以及嵌套关系。</p>
+<p>不想读配置也没关系，可以直接问：“我现在选中的这一项，实际是手动组还是自动选择组？这次访问有没有经过它？”</p>
+<h2 id="heading-1">容差：快一点点，未必要马上换</h2>
+<p>Mihomo 的自动选择组提供 <code>tolerance</code>，中文可以理解为“切换容差”，单位是毫秒，也就是延迟数字旁常见的 ms。<a href="https://wiki.metacubex.one/config/proxy-groups/url-test/">自动选择文档</a>说明了这一字段。</p>
+<p>它给节点切换留出余量：当前节点仍可用时，另一条节点只领先一点，可能继续保留当前选择。</p>
+<p><strong>下面是解释原理的虚构示例，不是本站测速结果，也不是推荐参数：</strong></p>
+<ul>
+<li>当前使用 A，本轮相关测试延迟为 80 ms。</li>
+<li>候选 B 为 60 ms，比 A 少 20 ms。</li>
+<li>该组切换容差设为 50 ms。</li>
+</ul>
+<p>如果走的是正常的自动比较分支，当前选择仍有效，20 ms 的优势没有超过这份余量，就可能继续用 A。不能看到 B 的数字更小，就认定自动选择没有工作。</p>
+<p>这也不是对所有配置的运行保证。本次核对的 <a href="https://github.com/MetaCubeX/mihomo/blob/v1.19.33/adapter/outboundgroup/urltest.go">Mihomo v1.19.33 选择逻辑</a>还会考虑已有选择是否存在、是否可用，以及是否有手动指定的选择；具体结果要结合实际内核版本和状态判断。</p>
+<h2 id="heading-2">列表上的数字，也可能不是这一轮的结果</h2>
+<p>健康检查是客户端按测试地址检查节点，和你手动打开某个网页是不同的动作。</p>
+<p>检查间隔 <code>interval</code> 以秒计，不代表每次刷新页面都立即重测。配置中的 <code>lazy</code> 还会影响未被选中策略组的测试。官方文档说明，它默认开启，未选择到该组时不进行测试。<a href="https://wiki.metacubex.one/config/proxy-groups/">查看健康检查相关字段</a></p>
+<p>因此，比较之前先确认三个条件：</p>
+<ol>
+<li>两条节点确实属于正在判断的同一个自动组。</li>
+<li>观察的是接近同一时间、相同测试地址的结果。</li>
+<li>本轮测试已经完成，而不是一边仍显示旧数字。</li>
+</ol>
+<p>如果不知道组的测试地址或测试范围，请配置提供方核对。不要为了让数字“对齐”，随意照抄别人的检查地址和时间间隔。</p>
+<h2 id="heading-3">新手可以按这个顺序核对</h2>
+<p>先记下当前节点和原有选择，再做一次简短检查：</p>
+<ol>
+<li><strong>打开一个平时需要代理的网站。</strong> 如果客户端有连接记录，查看这次请求实际经过的组和节点，避免只看旁边另一个组。</li>
+<li><strong>核对组类型。</strong> 是手动组，就先确认它选中了哪一个成员；是自动组，再继续查看容差。</li>
+<li><strong>检查是否手动固定过节点。</strong> 部分客户端会把这类操作保留下来。如果界面明确提供恢复自动选择的功能，按该客户端说明操作；找不到时不要猜按钮含义。</li>
+<li><strong>在当前组完成一次检查后，再观察新的访问。</strong> 记录测试时间、候选延迟及最终选择，不必连续猛点测速。</li>
+<li><strong>实际访问正常，就先保留设置。</strong> 自动组没有追着每一次微小波动切换，不等于你必须修改参数。</li>
+</ol>
+<p>把容差调成零，也不能证明使用体验会更好。本文的检查目标是解释选中状态，不是用更小的显示数字代替实际访问结果。</p>
+<h2 id="heading-4">如果节点已经超时，就别只盯着容差</h2>
+<p>“仍能使用，只是没有选最低延迟”和“当前节点已经不可用”，需要分开处理。核对的实现把当前选择不可用列为重新判断的条件之一，不能拿容差解释所有卡住或断线现象。<a href="https://github.com/MetaCubeX/mihomo/blob/v1.19.33/adapter/outboundgroup/urltest.go">对应版本实现</a></p>
+<p>如果当前节点反复测试超时，实际网页也打不开，先确认候选中是否还有可用节点。若有可用备选却仍未恢复，可以保存以下信息，向客户端项目或配置提供方反馈：</p>
+<ul>
+<li>客户端版本、内核版本、发生时间。</li>
+<li>当前组的名称、实际类型和容差。</li>
+<li>本轮测试地址、当前节点及候选的结果。</li>
+<li>新发起的请求实际经过哪一组，能否打开目标网页。</li>
+</ul>
+<p>截图或提交配置前，遮住订阅地址、密码和节点认证信息。这样记录的是可核查的现象，不会仅凭一次数字不一致，就把问题归结为机场线路故障。</p>
+<p>资料核对日期：2026 年 10 月 27 日。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://prosperairport.blog/tags/clash/"># Clash</a><a href="https://prosperairport.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://prosperairport.blog/tags/proxy-access/"># 翻墙</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://prosperairport.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/">← 上一篇</a><a href="https://prosperairport.blog/posts/daily-2026-10-26-01-router-dhcp-change-client-old-settings/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+</div><div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">先认清：组名叫“自动”，不代表类型就是自动</a><a class="level-2" href="#heading-1">容差：快一点点，未必要马上换</a><a class="level-2" href="#heading-2">列表上的数字，也可能不是这一轮的结果</a><a class="level-2" href="#heading-3">新手可以按这个顺序核对</a><a class="level-2" href="#heading-4">如果节点已经超时，就别只盯着容差</a></nav></aside>
+</div></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场</a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧</a><a href="https://t.me/oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我</a></nav>
+<span>© 2026阿旺的博客</span>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://prosperairport.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://prosperairport.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://prosperairport.blog/pagefind/" base-url="https://prosperairport.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/c93b4dbb-2e32-495a-932d-40989ffa11fc/","pageTitle":"自动选节点，为什么没换到延迟最低的那条？","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-307c7cfb-e43f-427e-96be-62becaa676a8","views":true,"viewsBase":0}</script>
+
+</body>
+</html>
