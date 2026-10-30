@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="landscape">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>订阅更新报空间不足，软路由该清理哪里？ · 阿旺</title>
+<meta name="description" content="OpenWrt 软路由更新代理订阅提示 No space left on device 怎么办？用 df 查看容量，区分 /tmp 与可写存储，说明清理范围和更新后的验证方法。">
+<meta name="keywords" content="软路由空间不足,OpenWrt存储,订阅更新失败,翻墙排障,df">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://prosperairport.blog/posts/daily-2026-10-30-01-router-subscription-update-storage-full/">
+<meta property="og:title" content="订阅更新报空间不足，软路由该清理哪里？">
+<meta property="og:description" content="OpenWrt 软路由更新代理订阅提示 No space left on device 怎么办？用 df 查看容量，区分 /tmp 与可写存储，说明清理范围和更新后的验证方法。">
+<meta property="og:url" content="https://prosperairport.blog/posts/daily-2026-10-30-01-router-subscription-update-storage-full/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="阿旺">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg"><meta property="og:image:alt" content="阿旺">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="订阅更新报空间不足，软路由该清理哪里？">
+<meta name="twitter:description" content="OpenWrt 软路由更新代理订阅提示 No space left on device 怎么办？用 df 查看容量，区分 /tmp 与可写存储，说明清理范围和更新后的验证方法。">
+<meta name="twitter:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<meta name="author" content="阿旺"><meta property="article:published_time" content="2026-10-30T09:07:50&#43;08:00"><meta property="article:modified_time" content="2026-10-30T09:07:54&#43;08:00"><meta property="article:tag" content="软路由"><meta property="article:tag" content="网络排障"><meta property="article:tag" content="翻墙">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://prosperairport.blog/posts/daily-2026-10-30-01-router-subscription-update-storage-full/#article","@type":"BlogPosting","author":{"@type":"Person","name":"阿旺"},"dateModified":"2026-10-30T09:07:54+08:00","datePublished":"2026-10-30T09:07:50+08:00","description":"OpenWrt 软路由更新代理订阅提示 No space left on device 怎么办？用 df 查看容量，区分 /tmp 与可写存储，说明清理范围和更新后的验证方法。","headline":"订阅更新报空间不足，软路由该清理哪里？","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://prosperairport.blog/posts/daily-2026-10-30-01-router-subscription-update-storage-full/","@type":"WebPage"},"url":"https://prosperairport.blog/posts/daily-2026-10-30-01-router-subscription-update-storage-full/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://prosperairport.blog/","name":"阿旺","position":1},{"@type":"ListItem","item":"https://prosperairport.blog/posts/daily-2026-10-30-01-router-subscription-update-storage-full/","name":"订阅更新报空间不足，软路由该清理哪里？","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/search.css"><script defer src="https://prosperairport.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/layouts.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/effects.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/reader.css">
+<link rel="icon" href="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/artalk.css"><script defer src="https://prosperairport.blog/assets/theme/artalk.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/theme.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/reader.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/viewer.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://prosperairport.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3YZ8BC7G6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Q3YZ8BC7G6');
+</script>
+
+<script defer src="https://prosperairport.blog/assets/xblog/google-analytics.js" data-xblog-google-analytics="G-Q3YZ8BC7G6" data-site-hosts="prosperairport.blog,www.prosperairport.blog"></script></head>
+
+<body class="reader-page theme-landscape article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://prosperairport.blog/"><img src="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg" alt="" width="38" height="38"><span>阿旺</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://prosperairport.blog/">首页</a></nav>
+<a class="search-toggle" href="https://prosperairport.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="page-viewport article-viewport"><div class="page-scroll article-scroll">
+<main id="main" tabindex="-1" class="landscape-workspace theme-workspace theme-article">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://prosperairport.blog/">阿旺</a></li><li><span aria-current="page">订阅更新报空间不足，软路由该清理哪里？</span></li></ol></nav>
+
+
+<div class="landscape-reading"><div class="landscape-scenic-strip" aria-hidden="true">
+<svg class="landscape-scene" viewBox="0 0 1440 360" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+<circle class="landscape-sun" cx="1100" cy="92" r="40" fill="var(--sun)"/>
+<path d="M0 246 160 149 263 210 465 65 628 189 810 96 993 211 1199 82 1440 212v148H0Z" fill="var(--mountain-far)"/>
+<path d="m0 278 167-49 154 51 267-125 148 113 178-71 153 77 150-133 223 125v94H0Z" fill="var(--mountain-mid)"/>
+<path d="M0 302c164-66 246 18 374-16s237 38 369 12 292-30 383 2 212-31 314-20v80H0Z" fill="var(--mountain-near)"/>
+<path d="M804 298c-77 5-60 17 14 17s77 16-50 19-138 23-80 26" fill="none" stroke="var(--river)" stroke-width="5" opacity=".7"/>
+<path d="m974 97 12-5 12 5m20-13 9-4 9 4" fill="none" stroke="var(--mountain-mid)" stroke-width="2"/>
+</svg></div><div class="landscape-journal">
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>
+行走与记述</div>
+<h1 data-pagefind-meta="title">订阅更新报空间不足，软路由该清理哪里？</h1>
+<div class="metadata" data-pagefind-ignore><span>阿旺</span><time datetime="2026-10-30T09:07:50&#43;08:00">2026-10-30</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://prosperairport.blog/categories/router-network-troubleshooting/">软路由与排障</a></div>
+</header>
+<div class="prose"><p>软路由更新机场订阅时，如果日志明确提示“空间不足”或 <code>No space left on device</code>，先确认写入位置，再决定清理什么。此时反复换节点，通常不能解决本机文件写不进去的问题。</p>
+<p>本文以 OpenWrt 为例，重点区分保存配置的空间和临时文件空间。不同设备、固件及外挂磁盘的布局可能不同，不能只按目录名称猜测。</p>
+<h2 id="heading">先看错误发生在哪一步</h2>
+<p>保存故障附近的日志，找出三个信息：失败时间、正在做什么、写入哪个文件或目录。</p>
+<p>例如，失败的是下载临时文件，还是把新配置保存到长期存储？只看到界面弹出“更新失败”，还不能确认是空间不足；访问超时、订阅失效和格式错误，需要按各自的错误继续查。</p>
+<p>把日志中的完整订阅、节点密码和认证信息遮住，再用于求助。</p>
+<h2 id="heading-1">内存有剩余，不代表配置还能保存</h2>
+<p>可以把它们理解成两种用途：</p>
+<ul>
+<li><strong>内存</strong>供程序运行，也可能承载临时文件。</li>
+<li><strong>长期存储</strong>保存重启后仍需保留的配置、软件和其他文件。</li>
+</ul>
+<p>OpenWrt 的启动程序会把 <code>/tmp</code> 挂载为 tmpfs。tmpfs 使用虚拟内存存放文件，和磁盘上的长期存储不是同一回事。<a href="https://github.com/openwrt/procd/blob/master/initd/early.c">OpenWrt 的挂载实现</a>、<a href="https://docs.kernel.org/filesystems/tmpfs.html">Linux tmpfs 说明</a></p>
+<p>所以，清理 <code>/tmp</code> 里的文件，不能据此认定长期保存配置的空间已经释放。反过来，长期存储还有剩余，也不能证明临时文件区一定够用。</p>
+<h2 id="heading-2">用一条查看命令，认清满的是哪里</h2>
+<p>已经会登录自己路由器终端的读者，可以运行：</p>
+<pre><code class="language-sh">df -h
+</code></pre>
+<p>这条命令只显示各文件系统的空间情况，不会删除内容。<code>-h</code> 用较容易读的单位显示大小；若固件不支持这个选项，可以运行 <code>df</code>，注意表头给出的单位。<a href="https://github.com/mirror/busybox/blob/master/coreutils/df.c">BusyBox 的 df 实现与帮助说明</a></p>
+<p>重点看三列：</p>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>怎样理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Available</td>
+<td>还可使用多少空间</td>
+</tr>
+<tr>
+<td>Use%</td>
+<td>已使用比例</td>
+</tr>
+<tr>
+<td>Mounted on</td>
+<td>这一行对应的挂载位置，也就是它管理的目录入口</td>
+</tr>
+</tbody>
+</table>
+<p>常见采用只读固件加可写层的安装中，<code>/overlay</code> 是需要关注的可写区域，<code>/tmp</code> 则另看。某些 x86 安装、扩容或外置存储方案的显示不同，应结合失败文件所在位置判断。<a href="https://github.com/openwrt/fstools/blob/master/mount_root.c">OpenWrt 文件系统挂载处理</a></p>
+<p>**举个虚构示例，并非本站设备实测：**错误指向保存配置的可写区域，该区域 Available 已为 0，而 <code>/tmp</code> 仍有剩余。此时删临时文件，并没有清到发生问题的那一处。</p>
+<p>不熟悉终端时，可以先在现有管理界面的存储信息中查找对应项目；找不到就带上错误路径，请固件维护者协助确认，不必为查容量临时安装更多工具。</p>
+<h2 id="heading-3">确认位置后，再按这个顺序清理</h2>
+<p>先把现有配置备份下载到电脑，保留此前能用的旧备份。LuCI 的备份页面提供配置归档下载功能，但代理插件另外保存的文件仍需按插件说明核对。<a href="https://github.com/openwrt/luci/blob/master/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js">LuCI 备份页面实现</a></p>
+<p>接着只处理能确认用途、且位于空间不足区域的内容：</p>
+<ol>
+<li><strong>自己额外保存的旧文件。</strong> 例如已经另存到电脑、确认不再使用的旧安装包或备份副本。通过原来的文件管理工具逐个处理，不凭文件名相似就批量删除。</li>
+<li><strong>后来安装且确实不用的软件。</strong> 在固件的软件管理入口核对名称与依赖，再按对应版本的卸载方式处理。网络、网页管理和正在使用的代理依赖，不要顺手一起卸载。</li>
+<li><strong>插件文档明确允许清理的缓存。</strong> 确认缓存路径、清理方式，以及是否需要暂停服务。没有说明时，先问维护者，不把配置文件当缓存。</li>
+</ol>
+<p>OpenWrt 的空间不足 FAQ 将卸载刷机后自行安装的软件列为处理方向，同时提醒：固件只读镜像中自带的软件不能靠普通卸载释放镜像空间。<a href="https://openwrt.org/faq/no_space_left_on_device">官方空间不足 FAQ</a></p>
+<p>在这种分层文件系统中，删除只读层原有文件，可能只是由可写层记录一个“隐藏它”的标记，原文件仍在。看起来从目录里消失，不等于相应空间已经腾出来。<a href="https://docs.kernel.org/filesystems/overlayfs.html#whiteouts-and-opaque-directories">Linux OverlayFS 的删除处理说明</a></p>
+<p>不要把整个 <code>/overlay</code> 或配置目录清空当作日常清理。那里面可能正是你要保留的联网设置与代理资料。</p>
+<h2 id="heading-4">清完以后，验证这一次更新</h2>
+<p>每处理一项就重新查看容量，确认释放的是目标区域。随后按插件原本的更新方式重试一次，并检查：</p>
+<ul>
+<li>原先的空间不足错误是否消失。</li>
+<li>新配置能否完整加载，节点列表是否正常。</li>
+<li>使用同一台测试设备，普通网页和需要翻墙的网站能否实际打开。</li>
+</ul>
+<p>空间恢复不代表之前失败的更新一定完整。保留原配置，核对新的更新与加载结果，再继续日常使用。</p>
+<p>如果空间仍不足，或显示有剩余却继续报错，就把型号、固件与插件版本、错误路径、容量结果一起提供给维护者。空间用尽只是一个方向，还可能需要检查文件数量限制或文件系统状态，不宜继续盲目删除。</p>
+<p>若每次清理后很快又满，继续追查哪个程序在写入、写到哪里；扩容或更换固件属于另一项需要按设备文档规划的操作，不能靠不断清缓存替代。</p>
+<p>资料核对日期：2026 年 10 月 30 日。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://prosperairport.blog/tags/soft-router/"># 软路由</a><a href="https://prosperairport.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://prosperairport.blog/tags/proxy-access/"># 翻墙</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://prosperairport.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/">← 上一篇</a><a href="https://prosperairport.blog/posts/daily-2026-10-29-01-subscription-converter-data-recipient/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+</div><div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">先看错误发生在哪一步</a><a class="level-2" href="#heading-1">内存有剩余，不代表配置还能保存</a><a class="level-2" href="#heading-2">用一条查看命令，认清满的是哪里</a><a class="level-2" href="#heading-3">确认位置后，再按这个顺序清理</a><a class="level-2" href="#heading-4">清完以后，验证这一次更新</a></nav></aside>
+</div></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场</a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧</a><a href="https://t.me/oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我</a></nav>
+<span>© 2026阿旺的博客</span>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://prosperairport.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://prosperairport.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://prosperairport.blog/pagefind/" base-url="https://prosperairport.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/096795f7-b88b-4443-986e-5eccddc43121/","pageTitle":"订阅更新报空间不足，软路由该清理哪里？","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-307c7cfb-e43f-427e-96be-62becaa676a8","views":true,"viewsBase":0}</script>
+
+</body>
+</html>
