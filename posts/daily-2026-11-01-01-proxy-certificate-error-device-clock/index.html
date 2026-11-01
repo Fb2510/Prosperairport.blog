@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="landscape">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>电脑时间不准，也会让代理连接失败吗？ · 阿旺</title>
+<meta name="description" content="Clash 类客户端提示证书已过期或尚未生效怎么办？解释设备时间与证书有效期，核对 Windows 11 校时和日志时区，再区分服务端证书与其他校验错误。">
+<meta name="keywords" content="代理证书错误,电脑时间不准,Clash排障,证书有效期,翻墙连接失败">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://prosperairport.blog/posts/daily-2026-11-01-01-proxy-certificate-error-device-clock/">
+<meta property="og:title" content="电脑时间不准，也会让代理连接失败吗？">
+<meta property="og:description" content="Clash 类客户端提示证书已过期或尚未生效怎么办？解释设备时间与证书有效期，核对 Windows 11 校时和日志时区，再区分服务端证书与其他校验错误。">
+<meta property="og:url" content="https://prosperairport.blog/posts/daily-2026-11-01-01-proxy-certificate-error-device-clock/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="阿旺">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg"><meta property="og:image:alt" content="阿旺">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="电脑时间不准，也会让代理连接失败吗？">
+<meta name="twitter:description" content="Clash 类客户端提示证书已过期或尚未生效怎么办？解释设备时间与证书有效期，核对 Windows 11 校时和日志时区，再区分服务端证书与其他校验错误。">
+<meta name="twitter:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<meta name="author" content="阿旺"><meta property="article:published_time" content="2026-11-01T09:28:18&#43;08:00"><meta property="article:modified_time" content="2026-11-01T09:28:21&#43;08:00"><meta property="article:tag" content="Clash"><meta property="article:tag" content="网络排障"><meta property="article:tag" content="翻墙">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://prosperairport.blog/posts/daily-2026-11-01-01-proxy-certificate-error-device-clock/#article","@type":"BlogPosting","author":{"@type":"Person","name":"阿旺"},"dateModified":"2026-11-01T09:28:21+08:00","datePublished":"2026-11-01T09:28:18+08:00","description":"Clash 类客户端提示证书已过期或尚未生效怎么办？解释设备时间与证书有效期，核对 Windows 11 校时和日志时区，再区分服务端证书与其他校验错误。","headline":"电脑时间不准，也会让代理连接失败吗？","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://prosperairport.blog/posts/daily-2026-11-01-01-proxy-certificate-error-device-clock/","@type":"WebPage"},"url":"https://prosperairport.blog/posts/daily-2026-11-01-01-proxy-certificate-error-device-clock/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://prosperairport.blog/","name":"阿旺","position":1},{"@type":"ListItem","item":"https://prosperairport.blog/posts/daily-2026-11-01-01-proxy-certificate-error-device-clock/","name":"电脑时间不准，也会让代理连接失败吗？","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/search.css"><script defer src="https://prosperairport.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/layouts.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/effects.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/reader.css">
+<link rel="icon" href="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/artalk.css"><script defer src="https://prosperairport.blog/assets/theme/artalk.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/theme.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/reader.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/viewer.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://prosperairport.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3YZ8BC7G6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Q3YZ8BC7G6');
+</script>
+
+<script defer src="https://prosperairport.blog/assets/xblog/google-analytics.js" data-xblog-google-analytics="G-Q3YZ8BC7G6" data-site-hosts="prosperairport.blog,www.prosperairport.blog"></script></head>
+
+<body class="reader-page theme-landscape article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://prosperairport.blog/"><img src="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg" alt="" width="38" height="38"><span>阿旺</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://prosperairport.blog/">首页</a></nav>
+<a class="search-toggle" href="https://prosperairport.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="page-viewport article-viewport"><div class="page-scroll article-scroll">
+<main id="main" tabindex="-1" class="landscape-workspace theme-workspace theme-article">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://prosperairport.blog/">阿旺</a></li><li><span aria-current="page">电脑时间不准，也会让代理连接失败吗？</span></li></ol></nav>
+
+
+<div class="landscape-reading"><div class="landscape-scenic-strip" aria-hidden="true">
+<svg class="landscape-scene" viewBox="0 0 1440 360" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+<circle class="landscape-sun" cx="1100" cy="92" r="40" fill="var(--sun)"/>
+<path d="M0 246 160 149 263 210 465 65 628 189 810 96 993 211 1199 82 1440 212v148H0Z" fill="var(--mountain-far)"/>
+<path d="m0 278 167-49 154 51 267-125 148 113 178-71 153 77 150-133 223 125v94H0Z" fill="var(--mountain-mid)"/>
+<path d="M0 302c164-66 246 18 374-16s237 38 369 12 292-30 383 2 212-31 314-20v80H0Z" fill="var(--mountain-near)"/>
+<path d="M804 298c-77 5-60 17 14 17s77 16-50 19-138 23-80 26" fill="none" stroke="var(--river)" stroke-width="5" opacity=".7"/>
+<path d="m974 97 12-5 12 5m20-13 9-4 9 4" fill="none" stroke="var(--mountain-mid)" stroke-width="2"/>
+</svg></div><div class="landscape-journal">
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>
+行走与记述</div>
+<h1 data-pagefind-meta="title">电脑时间不准，也会让代理连接失败吗？</h1>
+<div class="metadata" data-pagefind-ignore><span>阿旺</span><time datetime="2026-11-01T09:28:18&#43;08:00">2026-11-01</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://prosperairport.blog/categories/proxy-client-guides/">客户端教程</a></div>
+</header>
+<div class="prose"><p>会。使用常规 TLS 证书校验的代理连接，可能因为设备时间明显不准而失败。但“证书过期”也可能确实发生在服务端，不能看到这几个字就只改电脑时间。</p>
+<p>本文以 Windows 11 上的 Clash 类客户端为例，处理日志明确提示证书“已过期或尚未生效”的情况。其他证书错误不一定适用这条排查路线。</p>
+<h2 id="heading">这条错误，究竟在比较什么</h2>
+<p>日志中可能出现：</p>
+<p><code>x509: certificate has expired or is not yet valid</code></p>
+<p>意思是，用于校验的当前时间，没有落在相关证书的有效期内。它不等于“机场套餐到期”，也不能单凭这一句证明服务商没有续证书。</p>
+<p>Go 项目的证书校验实现会比较当前时间与证书的生效、失效时间；没有另外指定校验时间时，使用当前时间。<a href="https://go.dev/src/crypto/x509/verify.go">查看证书时间判断的实现</a></p>
+<p>**下面是虚构示例，不是本站故障记录：**一张证书从 2026 年开始有效，电脑却错误地停在 2020 年。即使证书按真实日期仍有效，校验也可能认为它“尚未生效”。反过来，设备时间跳到很久以后，也可能把有效证书判断为过期。</p>
+<h2 id="heading-1">先保存错误，再核对是哪台设备的时间</h2>
+<p>先记下错误原文、发生时间和节点名称。如果日志还列出“当前时间”和证书有效期，把这些信息一并保留。</p>
+<p>再看运行代理的设备：</p>
+<ul>
+<li>代理客户端直接运行在电脑上，就先核对这台电脑。</li>
+<li>如果报错来自软路由上的代理，电脑只是经它转发，就应检查软路由运行环境的时间，不能只校准电脑后便认为这一项已排除。</li>
+</ul>
+<p>日期、年份和小时都要看，不要只看任务栏右下角的分钟。可以对照一台已经确认自动对时正常的设备，先找出明显偏差。</p>
+<h2 id="windows-11-">Windows 11 上怎样核对</h2>
+<p>按 Microsoft 当前的官方说明，进入“开始 → 设置 → 时间和语言 → 日期和时间”：</p>
+<ol>
+<li>查看显示的日期与时间，确认有没有明显错误。</li>
+<li>开启“自动设置时间”，再检查系统校准后的结果。</li>
+<li>核对时区。可以使用自动设置，也可以关闭自动设置时区后，选择实际所在的时区。</li>
+<li>若时间仍不正确，先查看页面显示的同步状态或错误，按 Windows 的帮助继续处理，不把“开关已打开”当成校准成功。</li>
+</ol>
+<p><a href="https://support.microsoft.com/zh-cn/windows/experience/personalization/set-time-date-and-time-zone-settings-in-windows">查看 Microsoft 的日期、时间与时区设置步骤</a></p>
+<p>校准目标是真实的当前时间。不要为了让某张过期证书暂时通过，把日期故意调回过去。</p>
+<h2 id="heading-2">日志差八小时，也可能只是显示方式不同</h2>
+<p>日志可能使用 UTC，也就是协调世界时，时间末尾常见 <code>Z</code>；北京时间通常用 <code>+08:00</code> 表示偏移。</p>
+<p><strong>时间表示示例：</strong><code>2026-11-01T01:00:00Z</code> 与 <code>2026-11-01T09:00:00+08:00</code> 是同一个时刻。这是格式说明，不是实测数据。<a href="https://www.rfc-editor.org/rfc/rfc3339.html#section-4.2">查看 RFC 3339 的时区偏移说明</a></p>
+<p>所以，要先换算到同一时区，再比较日志与电脑显示。不能看到小时数不一样，就直接把系统时间加减八小时。</p>
+<h2 id="heading-3">校准以后，用同一节点重新验证</h2>
+<p>保持配置、接入方式和目标网页不变，让客户端重新发起连接，再看这一次的新日志。不要继续盯着校准前留下的错误。</p>
+<table>
+<thead>
+<tr>
+<th>这次看到的结果</th>
+<th>下一步</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>时间恢复正确，原错误消失，目标网页能打开</td>
+<td>记录这次变化，继续观察时间是否保持正确</td>
+</tr>
+<tr>
+<td>时间确认正确，仍提示同样的有效期错误</td>
+<td>保存错误中的有效期与节点信息，请服务商检查相关证书</td>
+</tr>
+<tr>
+<td>错误变成域名不匹配、签发者不受信任等</td>
+<td>按新的错误排查，不能继续只围绕时间调整</td>
+</tr>
+<tr>
+<td>电脑时间正确，但日志里的校验时间仍明显不同</td>
+<td>记录客户端、内核版本及运行环境，向项目维护者核对</td>
+</tr>
+</tbody>
+</table>
+<p>这里给的是排查方向。只有一条节点失败，可以先试已确认可用的备选，同时保留故障记录；一次换节点成功，不能直接证明原节点的具体原因。</p>
+<h2 id="heading-4">不用“跳过验证”代替修复</h2>
+<p>在 Mihomo 的 TLS 配置中，<code>skip-cert-verify</code> 的作用是跳过证书验证。<a href="https://wiki.metacubex.one/config/proxies/tls/#skip-cert-verify">查看该字段的官方说明</a></p>
+<p>打开它不会校准时间，也不会更新服务端证书。即使错误因此不再显示，也不能据此认为原问题已经解决。遇到不清楚的证书配置，先让提供方说明原因和应当使用的正确设置。</p>
+<p>求助时提供系统与客户端版本、校准前后的结果、经过遮挡的错误和节点名称即可。订阅链接、节点密码和完整配置中的凭据不要公开。</p>
+<p>资料核对日期：2026 年 11 月 1 日。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://prosperairport.blog/tags/clash/"># Clash</a><a href="https://prosperairport.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://prosperairport.blog/tags/proxy-access/"># 翻墙</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://prosperairport.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/">← 上一篇</a><a href="https://prosperairport.blog/posts/daily-2026-10-30-01-router-subscription-update-storage-full/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+</div><div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">这条错误，究竟在比较什么</a><a class="level-2" href="#heading-1">先保存错误，再核对是哪台设备的时间</a><a class="level-2" href="#windows-11-">Windows 11 上怎样核对</a><a class="level-2" href="#heading-2">日志差八小时，也可能只是显示方式不同</a><a class="level-2" href="#heading-3">校准以后，用同一节点重新验证</a><a class="level-2" href="#heading-4">不用“跳过验证”代替修复</a></nav></aside>
+</div></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场</a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧</a><a href="https://t.me/oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我</a></nav>
+<span>© 2026阿旺的博客</span>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://prosperairport.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://prosperairport.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://prosperairport.blog/pagefind/" base-url="https://prosperairport.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/1d06e678-6648-4a2d-8e74-634e479b85cb/","pageTitle":"电脑时间不准，也会让代理连接失败吗？","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-307c7cfb-e43f-427e-96be-62becaa676a8","views":true,"viewsBase":0}</script>
+
+</body>
+</html>
