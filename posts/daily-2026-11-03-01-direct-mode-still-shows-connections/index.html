@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="landscape">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>切到直连后，为什么客户端里还有访问记录？ · 阿旺</title>
+<meta name="description" content="Clash 类客户端切到直连后，为什么还有连接记录和流量统计？解释直连出口、运行模式与接管入口的区别，并给出针对新请求的核对方法。">
+<meta name="keywords" content="直连模式,DIRECT,Clash连接记录,系统代理,TUN">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://prosperairport.blog/posts/daily-2026-11-03-01-direct-mode-still-shows-connections/">
+<meta property="og:title" content="切到直连后，为什么客户端里还有访问记录？">
+<meta property="og:description" content="Clash 类客户端切到直连后，为什么还有连接记录和流量统计？解释直连出口、运行模式与接管入口的区别，并给出针对新请求的核对方法。">
+<meta property="og:url" content="https://prosperairport.blog/posts/daily-2026-11-03-01-direct-mode-still-shows-connections/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="阿旺">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg"><meta property="og:image:alt" content="阿旺">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="切到直连后，为什么客户端里还有访问记录？">
+<meta name="twitter:description" content="Clash 类客户端切到直连后，为什么还有连接记录和流量统计？解释直连出口、运行模式与接管入口的区别，并给出针对新请求的核对方法。">
+<meta name="twitter:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<meta name="author" content="阿旺"><meta property="article:published_time" content="2026-11-03T09:01:08&#43;08:00"><meta property="article:modified_time" content="2026-11-03T09:01:11&#43;08:00"><meta property="article:tag" content="Clash"><meta property="article:tag" content="网络排障"><meta property="article:tag" content="翻墙">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://prosperairport.blog/posts/daily-2026-11-03-01-direct-mode-still-shows-connections/#article","@type":"BlogPosting","author":{"@type":"Person","name":"阿旺"},"dateModified":"2026-11-03T09:01:11+08:00","datePublished":"2026-11-03T09:01:08+08:00","description":"Clash 类客户端切到直连后，为什么还有连接记录和流量统计？解释直连出口、运行模式与接管入口的区别，并给出针对新请求的核对方法。","headline":"切到直连后，为什么客户端里还有访问记录？","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://prosperairport.blog/posts/daily-2026-11-03-01-direct-mode-still-shows-connections/","@type":"WebPage"},"url":"https://prosperairport.blog/posts/daily-2026-11-03-01-direct-mode-still-shows-connections/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://prosperairport.blog/","name":"阿旺","position":1},{"@type":"ListItem","item":"https://prosperairport.blog/posts/daily-2026-11-03-01-direct-mode-still-shows-connections/","name":"切到直连后，为什么客户端里还有访问记录？","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/search.css"><script defer src="https://prosperairport.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/layouts.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/effects.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/reader.css">
+<link rel="icon" href="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/artalk.css"><script defer src="https://prosperairport.blog/assets/theme/artalk.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/theme.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/reader.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/viewer.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://prosperairport.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3YZ8BC7G6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Q3YZ8BC7G6');
+</script>
+
+<script defer src="https://prosperairport.blog/assets/xblog/google-analytics.js" data-xblog-google-analytics="G-Q3YZ8BC7G6" data-site-hosts="prosperairport.blog,www.prosperairport.blog"></script></head>
+
+<body class="reader-page theme-landscape article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://prosperairport.blog/"><img src="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg" alt="" width="38" height="38"><span>阿旺</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://prosperairport.blog/">首页</a></nav>
+<a class="search-toggle" href="https://prosperairport.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="page-viewport article-viewport"><div class="page-scroll article-scroll">
+<main id="main" tabindex="-1" class="landscape-workspace theme-workspace theme-article">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://prosperairport.blog/">阿旺</a></li><li><span aria-current="page">切到直连后，为什么客户端里还有访问记录？</span></li></ol></nav>
+
+
+<div class="landscape-reading"><div class="landscape-scenic-strip" aria-hidden="true">
+<svg class="landscape-scene" viewBox="0 0 1440 360" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+<circle class="landscape-sun" cx="1100" cy="92" r="40" fill="var(--sun)"/>
+<path d="M0 246 160 149 263 210 465 65 628 189 810 96 993 211 1199 82 1440 212v148H0Z" fill="var(--mountain-far)"/>
+<path d="m0 278 167-49 154 51 267-125 148 113 178-71 153 77 150-133 223 125v94H0Z" fill="var(--mountain-mid)"/>
+<path d="M0 302c164-66 246 18 374-16s237 38 369 12 292-30 383 2 212-31 314-20v80H0Z" fill="var(--mountain-near)"/>
+<path d="M804 298c-77 5-60 17 14 17s77 16-50 19-138 23-80 26" fill="none" stroke="var(--river)" stroke-width="5" opacity=".7"/>
+<path d="m974 97 12-5 12 5m20-13 9-4 9 4" fill="none" stroke="var(--mountain-mid)" stroke-width="2"/>
+</svg></div><div class="landscape-journal">
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>
+行走与记述</div>
+<h1 data-pagefind-meta="title">切到直连后，为什么客户端里还有访问记录？</h1>
+<div class="metadata" data-pagefind-ignore><span>阿旺</span><time datetime="2026-11-03T09:01:08&#43;08:00">2026-11-03</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://prosperairport.blog/categories/proxy-client-guides/">客户端教程</a></div>
+</header>
+<div class="prose"><p>切到直连模式后，客户端里仍然出现访问记录，可以是正常现象。直连决定请求从哪里出去；系统代理或 TUN 若还在工作，请求仍可能先进入本机客户端，再由它直接访问目标。</p>
+<p>本文以 Windows 11 上使用 Mihomo 内核的 Clash 类客户端为例，解释这个现象。具体按钮按自己的客户端界面核对，不需要为了“让列表变空”先删除订阅。</p>
+<h2 id="heading">直连之后，程序仍可能在中间处理</h2>
+<p>可以用下面的路径理解。<strong>这是原理示意，不是本站的实测记录：</strong></p>
+<ul>
+<li>使用机场节点：浏览器 → 本机客户端 → 机场节点 → 目标网站。</li>
+<li>由客户端直连：浏览器 → 本机客户端 → 目标网站。</li>
+</ul>
+<p>两条路径都经过本机客户端，所以“经过客户端”和“经过机场节点”需要分别确认。</p>
+<p>Clash Verge Rev 的官方解释将系统代理、TUN 归为流量进入客户端的方式，将规则、全局、直连归为流量出去的方式。<a href="https://www.clashverge.dev/guide/term.html">查看官方模式说明</a></p>
+<p>Mihomo 的内置 <code>DIRECT</code> 表示数据直接出站。<a href="https://wiki.metacubex.one/config/proxies/built-in/#direct">查看 DIRECT 定义</a><br>
+据此可以理解：改变出口选择，不等于同时停止接收和处理请求。</p>
+<h2 id="-direct">看到了 DIRECT，先确认它在哪一层</h2>
+<p>下面两种情况看起来都有“直连”，含义却不同：</p>
+<table>
+<thead>
+<tr>
+<th>看到的位置</th>
+<th>应怎样理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>当前运行模式是“直连”</td>
+<td>普通转发请求采用直连模式处理</td>
+</tr>
+<tr>
+<td>规则模式下，某次连接显示 DIRECT</td>
+<td>这一次请求走直连，其他请求仍需看各自的规则与出口</td>
+</tr>
+</tbody>
+</table>
+<p>Mihomo 将 <code>rule</code>、<code>global</code>、<code>direct</code> 分别列为运行模式；在规则模式下，出口由匹配结果决定。<a href="https://wiki.metacubex.one/config/general/#%E8%BF%90%E8%A1%8C%E6%A8%A1%E5%BC%8F">查看运行模式说明</a>、<a href="https://github.com/MetaCubeX/mihomo/blob/v1.19.33/tunnel/tunnel.go">查看规则处理的项目实现</a></p>
+<p>因此，只在列表里找到一条 DIRECT，不能据此认定整份配置已经切成直连。也不要只看某个节点仍被高亮，就判断新请求仍然走它。</p>
+<h2 id="heading-1">有记录、有流量数字，都要继续看出口</h2>
+<p>本次核对的 Mihomo v1.19.33 实现中，直连模式会选择 DIRECT 出口，同时仍可输出直连日志；成功建立的 TCP 连接也进入连接统计处理。<a href="https://github.com/MetaCubeX/mihomo/blob/v1.19.33/tunnel/tunnel.go">查看连接处理与日志实现</a></p>
+<p>这说明直连连接仍可能出现在客户端的记录和统计中。具体界面还受版本、筛选条件和显示范围影响，不能要求所有客户端都显示同样的列表。</p>
+<p>同样，客户端统计到传输了数据，也不能单凭这个数字认定机场扣除了相同额度。要判断这次有没有使用节点，先查看对应连接的实际出口。</p>
+<h2 id="heading-2">做一次只针对新请求的核对</h2>
+<p>先记下原来的运行模式，避开正在通话、上传或下载的重要任务，然后做这个简短对比：</p>
+<ol>
+<li>确认当前客户端显示的运行模式已经切到“直连”，留意有没有切换失败提示。</li>
+<li>记下操作时间，重新打开一个平时能够直接访问的普通网页。</li>
+<li>如果客户端提供连接详情，按时间和目标域名找到对应条目，展开出口或连接链信息，查看是否为 DIRECT。</li>
+<li>测试完成后，按自己的日常需要恢复原模式，再确认需要翻墙的网站能否访问。</li>
+</ol>
+<p>重点是对应上“刚才打开的网页”，而不是观察旧记录有没有立即消失。界面只显示历史记录、存在筛选或没有捕捉到短连接时，也不能据此断言请求完全没有经过客户端。</p>
+<p>如果明确切到直连，新建立的普通请求却仍显示某条机场节点，先核对是否看错了客户端、配置或记录。有人为你定制过额外出口处理时，请维护者解释实际路径，不要反复切换同一个按钮来猜。</p>
+<h2 id="heading-3">想让流量完全不经过这款客户端怎么办</h2>
+<p>这时需要检查的是系统代理、TUN，以及应用自己单独填写的代理入口，按所用客户端的说明停用本次接管方式。只改变运行模式，不能代替这一步。</p>
+<p>官方快速入门也把“选择节点和模式”与“打开系统代理或 TUN”分成独立步骤。<a href="https://www.clashverge.dev/guide/quickstart.html">查看快速入门</a></p>
+<p>停用后重新测试普通网页，确认基础访问正常，再按需退出客户端。若同时用了多个入口，要分别核对，保留原设置方便恢复；本文不要求清空电脑中所有代理相关选项。</p>
+<p>最后，DIRECT 反映的是这款客户端为相应请求选择的处理方式。家中路由器若另有代理，仍需单独核对，不能仅凭本机这一条记录判断整条访问路径。</p>
+<p>求助时提供客户端与内核版本、运行模式、入口状态和这次新请求的出口即可。截图遮住订阅、密码及不必公开的访问内容。</p>
+<p>资料核对日期：2026 年 11 月 3 日。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://prosperairport.blog/tags/clash/"># Clash</a><a href="https://prosperairport.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://prosperairport.blog/tags/proxy-access/"># 翻墙</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://prosperairport.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/">← 上一篇</a><a href="https://prosperairport.blog/posts/daily-2026-11-02-01-annual-plan-monthly-traffic-reset/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+</div><div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">直连之后，程序仍可能在中间处理</a><a class="level-2" href="#-direct">看到了 DIRECT，先确认它在哪一层</a><a class="level-2" href="#heading-1">有记录、有流量数字，都要继续看出口</a><a class="level-2" href="#heading-2">做一次只针对新请求的核对</a><a class="level-2" href="#heading-3">想让流量完全不经过这款客户端怎么办</a></nav></aside>
+</div></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场</a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧</a><a href="https://t.me/oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我</a></nav>
+<span>© 2026阿旺的博客</span>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://prosperairport.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://prosperairport.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://prosperairport.blog/pagefind/" base-url="https://prosperairport.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/a1191c6f-604a-437c-9a1b-bf129390927a/","pageTitle":"切到直连后，为什么客户端里还有访问记录？","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-307c7cfb-e43f-427e-96be-62becaa676a8","views":true,"viewsBase":0}</script>
+
+</body>
+</html>

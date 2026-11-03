@@ -20,7 +20,7 @@
 <meta name="twitter:description" content="整理 Clash、Shadowrocket 等代理客户端的基础使用和故障排查方法。">
 <meta name="twitter:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
 
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://prosperairport.blog/categories/proxy-client-guides/#collection","@type":"CollectionPage","description":"整理 Clash、Shadowrocket 等代理客户端的基础使用和故障排查方法。","inLanguage":"zh-CN","mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","name":"电脑时间不准，也会让代理连接失败吗？","position":1,"url":"https://prosperairport.blog/posts/daily-2026-11-01-01-proxy-certificate-error-device-clock/"},{"@type":"ListItem","name":"代理关了又连上，是谁在自动启动？","position":2,"url":"https://prosperairport.blog/posts/daily-2026-10-28-01-iphone-proxy-reconnect-automatic-triggers/"},{"@type":"ListItem","name":"自动选节点，为什么没换到延迟最低的那条？","position":3,"url":"https://prosperairport.blog/posts/daily-2026-10-27-01-auto-selection-latency-tolerance/"},{"@type":"ListItem","name":"换手机后，先找回买过的代理客户端","position":4,"url":"https://prosperairport.blog/posts/daily-2026-10-18-01-restore-purchased-proxy-client-on-new-iphone/"},{"@type":"ListItem","name":"新节点没出现，先核对正在使用的那份配置","position":5,"url":"https://prosperairport.blog/posts/daily-2026-10-15-01-subscription-update-active-profile-mismatch/"},{"@type":"ListItem","name":"浏览器能翻墙，游戏和聊天软件却不通？先查流量入口","position":6,"url":"https://prosperairport.blog/posts/daily-2026-10-12-02-browser-works-other-apps-proxy-entry/"},{"@type":"ListItem","name":"Shadowrocket、iPhone 和机场的流量对不上？先对齐统计范围","position":7,"url":"https://prosperairport.blog/posts/daily-2026-10-11-02-shadowrocket-airport-data-usage-comparison/"},{"@type":"ListItem","name":"退出 Clash 后，普通网页也打不开？检查 Windows 代理残留","position":8,"url":"https://prosperairport.blog/posts/daily-2026-10-10-01-windows-proxy-left-after-clash-exit/"},{"@type":"ListItem","name":"Shadowrocket 用流量正常，连 Wi-Fi 就失效？做三次对比","position":9,"url":"https://prosperairport.blog/posts/daily-2026-10-08-02-shadowrocket-cellular-works-wifi-fails/"},{"@type":"ListItem","name":"Clash 更新规则后，只有一个网站打不开：从连接记录查起","position":10,"url":"https://prosperairport.blog/posts/daily-2026-10-08-01-clash-rule-update-single-site-failure/"}]},"name":"客户端教程","url":"https://prosperairport.blog/categories/proxy-client-guides/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://prosperairport.blog/","name":"阿旺","position":1},{"@type":"ListItem","item":"https://prosperairport.blog/categories/proxy-client-guides/","name":"客户端教程","position":2}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://prosperairport.blog/categories/proxy-client-guides/#collection","@type":"CollectionPage","description":"整理 Clash、Shadowrocket 等代理客户端的基础使用和故障排查方法。","inLanguage":"zh-CN","mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","name":"切到直连后，为什么客户端里还有访问记录？","position":1,"url":"https://prosperairport.blog/posts/daily-2026-11-03-01-direct-mode-still-shows-connections/"},{"@type":"ListItem","name":"电脑时间不准，也会让代理连接失败吗？","position":2,"url":"https://prosperairport.blog/posts/daily-2026-11-01-01-proxy-certificate-error-device-clock/"},{"@type":"ListItem","name":"代理关了又连上，是谁在自动启动？","position":3,"url":"https://prosperairport.blog/posts/daily-2026-10-28-01-iphone-proxy-reconnect-automatic-triggers/"},{"@type":"ListItem","name":"自动选节点，为什么没换到延迟最低的那条？","position":4,"url":"https://prosperairport.blog/posts/daily-2026-10-27-01-auto-selection-latency-tolerance/"},{"@type":"ListItem","name":"换手机后，先找回买过的代理客户端","position":5,"url":"https://prosperairport.blog/posts/daily-2026-10-18-01-restore-purchased-proxy-client-on-new-iphone/"},{"@type":"ListItem","name":"新节点没出现，先核对正在使用的那份配置","position":6,"url":"https://prosperairport.blog/posts/daily-2026-10-15-01-subscription-update-active-profile-mismatch/"},{"@type":"ListItem","name":"浏览器能翻墙，游戏和聊天软件却不通？先查流量入口","position":7,"url":"https://prosperairport.blog/posts/daily-2026-10-12-02-browser-works-other-apps-proxy-entry/"},{"@type":"ListItem","name":"Shadowrocket、iPhone 和机场的流量对不上？先对齐统计范围","position":8,"url":"https://prosperairport.blog/posts/daily-2026-10-11-02-shadowrocket-airport-data-usage-comparison/"},{"@type":"ListItem","name":"退出 Clash 后，普通网页也打不开？检查 Windows 代理残留","position":9,"url":"https://prosperairport.blog/posts/daily-2026-10-10-01-windows-proxy-left-after-clash-exit/"},{"@type":"ListItem","name":"Shadowrocket 用流量正常，连 Wi-Fi 就失效？做三次对比","position":10,"url":"https://prosperairport.blog/posts/daily-2026-10-08-02-shadowrocket-cellular-works-wifi-fails/"}]},"name":"客户端教程","url":"https://prosperairport.blog/categories/proxy-client-guides/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://prosperairport.blog/","name":"阿旺","position":1},{"@type":"ListItem","item":"https://prosperairport.blog/categories/proxy-client-guides/","name":"客户端教程","position":2}]}]}</script>
 
 <script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
 <link rel="stylesheet" href="https://prosperairport.blog/assets/theme/style.css">
@@ -89,6 +89,25 @@
 <span class="theme-list-count">本页 10 篇</span>
 </div>
 <section class="article-list landscape-entries" aria-label="文章列表"><article class="article-card landscape-entry">
+<div class="trail-waypoint" aria-hidden="true">
+<span class="card-index">
+</span>
+</div>
+<div class="trail-story">
+<div class="entry-categories"><a class="card-category" href="https://prosperairport.blog/categories/proxy-client-guides/">客户端教程</a></div>
+<h2>
+<a href="https://prosperairport.blog/posts/daily-2026-11-03-01-direct-mode-still-shows-connections/">切到直连后，为什么客户端里还有访问记录？</a></h2>
+<p class="card-summary">直连模式仍有访问记录，并不一定是切换失败。用两条简单路径解释本机处理与机场节点的区别，再按新请求的时间、目标和实际出口核对结果。</p>
+<div class="trail-footer">
+<div class="card-meta">
+<span>阿旺</span>
+<time datetime="2026-11-03T09:01:08&#43;08:00">2026-11-03</time>
+</div>
+<a class="read-more" href="https://prosperairport.blog/posts/daily-2026-11-03-01-direct-mode-still-shows-connections/" aria-label="阅读切到直连后，为什么客户端里还有访问记录？">继续行读 <span aria-hidden="true">↗</span>
+</a>
+</div>
+</div>
+</article><article class="article-card landscape-entry">
 <div class="trail-waypoint" aria-hidden="true">
 <span class="card-index">
 </span>
@@ -256,25 +275,6 @@
 <time datetime="2026-10-09T22:28:16&#43;08:00">2026-10-09</time>
 </div>
 <a class="read-more" href="https://prosperairport.blog/posts/daily-2026-10-08-02-shadowrocket-cellular-works-wifi-fails/" aria-label="阅读Shadowrocket 用流量正常，连 Wi-Fi 就失效？做三次对比">继续行读 <span aria-hidden="true">↗</span>
-</a>
-</div>
-</div>
-</article><article class="article-card landscape-entry">
-<div class="trail-waypoint" aria-hidden="true">
-<span class="card-index">
-</span>
-</div>
-<div class="trail-story">
-<div class="entry-categories"><a class="card-category" href="https://prosperairport.blog/categories/proxy-client-guides/">客户端教程</a></div>
-<h2>
-<a href="https://prosperairport.blog/posts/daily-2026-10-08-01-clash-rule-update-single-site-failure/">Clash 更新规则后，只有一个网站打不开：从连接记录查起</a></h2>
-<p class="card-summary">其他网站正常，只有一个网站在更新规则后打不开？先确认实际命中的规则和策略组，再用同一节点对比，避免直接重装或乱加规则。</p>
-<div class="trail-footer">
-<div class="card-meta">
-<span>阿旺</span>
-<time datetime="2026-10-09T22:28:11&#43;08:00">2026-10-09</time>
-</div>
-<a class="read-more" href="https://prosperairport.blog/posts/daily-2026-10-08-01-clash-rule-update-single-site-failure/" aria-label="阅读Clash 更新规则后，只有一个网站打不开：从连接记录查起">继续行读 <span aria-hidden="true">↗</span>
 </a>
 </div>
 </div>
