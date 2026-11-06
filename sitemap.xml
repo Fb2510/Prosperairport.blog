@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://prosperairport.blog/</loc>
-    <lastmod>2026-11-04T03:33:50Z</lastmod>
+    <lastmod>2026-11-06T13:14:44Z</lastmod>
   </url>
   <url>
     <loc>https://prosperairport.blog/categories/airport-review/</loc>
@@ -10,7 +10,7 @@
   </url>
   <url>
     <loc>https://prosperairport.blog/categories/airport-selection-risk/</loc>
-    <lastmod>2026-11-02T07:38:20Z</lastmod>
+    <lastmod>2026-11-06T13:14:44Z</lastmod>
   </url>
   <url>
     <loc>https://prosperairport.blog/categories/proxy-client-guides/</loc>
@@ -22,23 +22,23 @@
   </url>
   <url>
     <loc>https://prosperairport.blog/categories/router-network-troubleshooting/</loc>
-    <lastmod>2026-10-30T02:25:47Z</lastmod>
+    <lastmod>2026-11-06T13:14:44Z</lastmod>
   </url>
   <url>
     <loc>https://prosperairport.blog/page/2/</loc>
-    <lastmod>2026-11-04T03:33:50Z</lastmod>
+    <lastmod>2026-11-06T13:14:44Z</lastmod>
   </url>
   <url>
     <loc>https://prosperairport.blog/page/3/</loc>
-    <lastmod>2026-11-04T03:33:50Z</lastmod>
+    <lastmod>2026-11-06T13:14:44Z</lastmod>
   </url>
   <url>
     <loc>https://prosperairport.blog/page/4/</loc>
-    <lastmod>2026-11-04T03:33:50Z</lastmod>
+    <lastmod>2026-11-06T13:14:44Z</lastmod>
   </url>
   <url>
     <loc>https://prosperairport.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/</loc>
-    <lastmod>2026-11-04T03:33:50Z</lastmod>
+    <lastmod>2026-11-06T13:14:44Z</lastmod>
   </url>
   <url>
     <loc>https://prosperairport.blog/posts/airport-outage-and-risk-record/</loc>
@@ -154,7 +154,15 @@
   </url>
   <url>
     <loc>https://prosperairport.blog/posts/daily-2026-11-04-01-captive-wifi-login-before-proxy/</loc>
-    <lastmod>2026-11-04T01:08:30Z</lastmod>
+    <lastmod>2026-11-06T13:14:44Z</lastmod>
+  </url>
+  <url>
+    <loc>https://prosperairport.blog/posts/daily-2026-11-05-01-router-proxy-download-cpu-observation/</loc>
+    <lastmod>2026-11-05T01:02:33Z</lastmod>
+  </url>
+  <url>
+    <loc>https://prosperairport.blog/posts/daily-2026-11-06-01-node-region-website-location-mismatch/</loc>
+    <lastmod>2026-11-06T01:05:50Z</lastmod>
   </url>
   <url>
     <loc>https://prosperairport.blog/posts/openwrt-router-proxy-setup-troubleshooting/</loc>
@@ -178,35 +186,35 @@
   </url>
   <url>
     <loc>https://prosperairport.blog/tags/network-troubleshooting/</loc>
-    <lastmod>2026-11-04T03:33:50Z</lastmod>
+    <lastmod>2026-11-06T13:14:44Z</lastmod>
   </url>
   <url>
     <loc>https://prosperairport.blog/tags/network-troubleshooting/page/2/</loc>
-    <lastmod>2026-11-04T03:33:50Z</lastmod>
+    <lastmod>2026-11-06T13:14:44Z</lastmod>
   </url>
   <url>
     <loc>https://prosperairport.blog/tags/network-troubleshooting/page/3/</loc>
-    <lastmod>2026-11-04T03:33:50Z</lastmod>
+    <lastmod>2026-11-06T13:14:44Z</lastmod>
   </url>
   <url>
     <loc>https://prosperairport.blog/tags/proxy-access/</loc>
-    <lastmod>2026-11-04T03:33:50Z</lastmod>
+    <lastmod>2026-11-06T13:14:44Z</lastmod>
   </url>
   <url>
     <loc>https://prosperairport.blog/tags/proxy-access/page/2/</loc>
-    <lastmod>2026-11-04T03:33:50Z</lastmod>
+    <lastmod>2026-11-06T13:14:44Z</lastmod>
   </url>
   <url>
     <loc>https://prosperairport.blog/tags/proxy-access/page/3/</loc>
-    <lastmod>2026-11-04T03:33:50Z</lastmod>
+    <lastmod>2026-11-06T13:14:44Z</lastmod>
   </url>
   <url>
     <loc>https://prosperairport.blog/tags/proxy-access/page/4/</loc>
-    <lastmod>2026-11-04T01:08:30Z</lastmod>
+    <lastmod>2026-11-06T13:14:44Z</lastmod>
   </url>
   <url>
     <loc>https://prosperairport.blog/tags/risk-records/</loc>
-    <lastmod>2026-10-29T08:06:12Z</lastmod>
+    <lastmod>2026-11-06T13:14:44Z</lastmod>
   </url>
   <url>
     <loc>https://prosperairport.blog/tags/shadowrocket/</loc>
@@ -214,6 +222,6 @@
   </url>
   <url>
     <loc>https://prosperairport.blog/tags/soft-router/</loc>
-    <lastmod>2026-10-30T02:25:47Z</lastmod>
+    <lastmod>2026-11-06T13:14:44Z</lastmod>
   </url>
 </urlset>
