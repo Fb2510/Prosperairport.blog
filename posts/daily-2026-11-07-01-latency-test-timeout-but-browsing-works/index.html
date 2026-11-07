@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="landscape">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>测速一直超时，网页却正常：先查测试地址 · 阿旺</title>
+<meta name="description" content="面向 Clash 类客户端新手，说明节点测速超时但网页正常时如何排查：确认实际节点、核对健康检查地址与超时设置，分清 204 空白响应和检查失败，并保留可核验的信息。">
+<meta name="keywords" content="节点测速超时,健康检查,Clash排障,代理测试地址">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://prosperairport.blog/posts/daily-2026-11-07-01-latency-test-timeout-but-browsing-works/">
+<meta property="og:title" content="测速一直超时，网页却正常：先查测试地址">
+<meta property="og:description" content="面向 Clash 类客户端新手，说明节点测速超时但网页正常时如何排查：确认实际节点、核对健康检查地址与超时设置，分清 204 空白响应和检查失败，并保留可核验的信息。">
+<meta property="og:url" content="https://prosperairport.blog/posts/daily-2026-11-07-01-latency-test-timeout-but-browsing-works/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="阿旺">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg"><meta property="og:image:alt" content="阿旺">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="测速一直超时，网页却正常：先查测试地址">
+<meta name="twitter:description" content="面向 Clash 类客户端新手，说明节点测速超时但网页正常时如何排查：确认实际节点、核对健康检查地址与超时设置，分清 204 空白响应和检查失败，并保留可核验的信息。">
+<meta name="twitter:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<meta name="author" content="阿旺"><meta property="article:published_time" content="2026-11-07T09:00:19&#43;08:00"><meta property="article:modified_time" content="2026-11-07T09:00:21&#43;08:00"><meta property="article:tag" content="Clash"><meta property="article:tag" content="网络排障"><meta property="article:tag" content="翻墙">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://prosperairport.blog/posts/daily-2026-11-07-01-latency-test-timeout-but-browsing-works/#article","@type":"BlogPosting","author":{"@type":"Person","name":"阿旺"},"dateModified":"2026-11-07T09:00:21+08:00","datePublished":"2026-11-07T09:00:19+08:00","description":"面向 Clash 类客户端新手，说明节点测速超时但网页正常时如何排查：确认实际节点、核对健康检查地址与超时设置，分清 204 空白响应和检查失败，并保留可核验的信息。","headline":"测速一直超时，网页却正常：先查测试地址","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://prosperairport.blog/posts/daily-2026-11-07-01-latency-test-timeout-but-browsing-works/","@type":"WebPage"},"url":"https://prosperairport.blog/posts/daily-2026-11-07-01-latency-test-timeout-but-browsing-works/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://prosperairport.blog/","name":"阿旺","position":1},{"@type":"ListItem","item":"https://prosperairport.blog/posts/daily-2026-11-07-01-latency-test-timeout-but-browsing-works/","name":"测速一直超时，网页却正常：先查测试地址","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/search.css"><script defer src="https://prosperairport.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/layouts.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/effects.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/reader.css">
+<link rel="icon" href="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/artalk.css"><script defer src="https://prosperairport.blog/assets/theme/artalk.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/theme.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/reader.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/viewer.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://prosperairport.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3YZ8BC7G6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Q3YZ8BC7G6');
+</script>
+
+<script defer src="https://prosperairport.blog/assets/xblog/google-analytics.js" data-xblog-google-analytics="G-Q3YZ8BC7G6" data-site-hosts="prosperairport.blog,www.prosperairport.blog"></script></head>
+
+<body class="reader-page theme-landscape article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://prosperairport.blog/"><img src="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg" alt="" width="38" height="38"><span>阿旺</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://prosperairport.blog/">首页</a></nav>
+<a class="search-toggle" href="https://prosperairport.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="page-viewport article-viewport"><div class="page-scroll article-scroll">
+<main id="main" tabindex="-1" class="landscape-workspace theme-workspace theme-article">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://prosperairport.blog/">阿旺</a></li><li><span aria-current="page">测速一直超时，网页却正常：先查测试地址</span></li></ol></nav>
+
+
+<div class="landscape-reading"><div class="landscape-scenic-strip" aria-hidden="true">
+<svg class="landscape-scene" viewBox="0 0 1440 360" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+<circle class="landscape-sun" cx="1100" cy="92" r="40" fill="var(--sun)"/>
+<path d="M0 246 160 149 263 210 465 65 628 189 810 96 993 211 1199 82 1440 212v148H0Z" fill="var(--mountain-far)"/>
+<path d="m0 278 167-49 154 51 267-125 148 113 178-71 153 77 150-133 223 125v94H0Z" fill="var(--mountain-mid)"/>
+<path d="M0 302c164-66 246 18 374-16s237 38 369 12 292-30 383 2 212-31 314-20v80H0Z" fill="var(--mountain-near)"/>
+<path d="M804 298c-77 5-60 17 14 17s77 16-50 19-138 23-80 26" fill="none" stroke="var(--river)" stroke-width="5" opacity=".7"/>
+<path d="m974 97 12-5 12 5m20-13 9-4 9 4" fill="none" stroke="var(--mountain-mid)" stroke-width="2"/>
+</svg></div><div class="landscape-journal">
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>
+行走与记述</div>
+<h1 data-pagefind-meta="title">测速一直超时，网页却正常：先查测试地址</h1>
+<div class="metadata" data-pagefind-ignore><span>阿旺</span><time datetime="2026-11-07T09:00:19&#43;08:00">2026-11-07</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://prosperairport.blog/categories/proxy-client-guides/">客户端教程</a></div>
+</header>
+<div class="prose"><p>节点测速显示超时，网页却能打开时，先确认网页确实经过被测节点，再核对测速用的地址和判断条件。这两件事检查的目标可能不同，结果对不上不一定是客户端出错。</p>
+<p>本文以采用 Mihomo 内核的 Clash 类客户端为例，适用于能查看节点测试设置的使用场景。不同系统、客户端和版本的菜单与错误文字有差别，找不到对应功能时，先请配置提供方确认。</p>
+<h2 id="heading">延迟测试，其实有一个指定目的地</h2>
+<p>这里说的测速，是节点列表旁显示多少毫秒的延迟测试，不是下载速度测试。它会向某个指定地址发起检查，而不是替你试遍所有网站。</p>
+<p>Mihomo 的健康检查有测试地址 <code>url</code> 和等待上限 <code>timeout</code> 等设置。代理集合可以理解为一批从同一来源加载的节点，其检查参数见<a href="https://wiki.metacubex.one/config/proxy-providers/#health-check">项目的健康检查说明</a>（2026 年 11 月 7 日核对）。</p>
+<p>因此，同一节点可能打不开测试目的地，却能访问你常用的网页；反过来，测试通过也不能保证每个网站都正常。这是根据测试范围作出的判断，不是对任何具体机场的实测结论。</p>
+<h2 id="heading-1">先排除“网页根本没走这条节点”</h2>
+<p>保留当前配置，临时选定一个具体节点。打开一个平时需要代理访问的网站，并加载新的页面内容，避免只看已经留在屏幕上的旧页面。</p>
+<p>如果客户端提供连接记录，查看这次新请求实际用了哪条节点。若它走了直连、另一个策略组，或已经切换到备选节点，这次访问成功就不能用来证明被测节点可用。</p>
+<p>策略组就是把候选节点放在一起，再决定使用哪一个的分组。只看组名叫“自动”或“代理”，还不足以确认实际选择。Mihomo 的<a href="https://wiki.metacubex.one/api/#connections">连接信息说明</a>包含代理链路和规则等信息，客户端是否展示、怎样展示，以实际功能为准（2026 年 11 月 7 日核对）。</p>
+<p>确认网页经过同一节点后，再继续比较测试结果。</p>
+<h2 id="heading-2">接着核对三件事</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>新手怎样理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>测试地址</td>
+<td>这次检查要访问哪个网址</td>
+</tr>
+<tr>
+<td>超时时间</td>
+<td>最多等多久，不是实际测出的延迟</td>
+</tr>
+<tr>
+<td>期望状态</td>
+<td>要收到什么网页响应，才算通过</td>
+</tr>
+</tbody>
+</table>
+<p>先记下原来的设置，不要同时更换节点、测试地址和等待时间。还要问清自己看的究竟是手动测速，还是后台自动检查。</p>
+<p>这点容易忽略：Mihomo 的单次延迟测试可以指定地址和超时时间；代理组与代理集合也各有相关设置。改了一个组，不一定就改到了当前按钮使用的测试参数。<a href="https://wiki.metacubex.one/api/">查看单次测试参数</a>与<a href="https://wiki.metacubex.one/config/proxy-groups/#url">代理组检查范围</a>（2026 年 11 月 7 日核对）。不熟悉配置时，把这三个问题交给配置提供方核对即可。</p>
+<h2 id="heading-3">“空白页”和“检查失败”要分开看</h2>
+<p>项目文档列出的健康检查地址之一是 <code>https://www.gstatic.com/generate_204</code>。它并不是普通的文章首页，不能只凭浏览器没有显示正文，就认定访问失败。</p>
+<p>HTTP 状态码是服务器对请求结果给出的编号。<code>204</code> 表示请求成功但没有响应正文，见 <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Reference/Status/204">MDN 对 204 的说明</a>（2026 年 11 月 7 日核对）。浏览器里的空白现象本身，既不能证明它收到了 204，也不能证明请求超时。</p>
+<p>另外，如果检查设置了期望状态，收到别的状态也可能判为失败。这和一直等不到结果的超时不是同一种情况。<a href="https://wiki.metacubex.one/config/proxy-groups/#expected-status">Mihomo 的期望状态说明</a>列出了判断条件（2026 年 11 月 7 日核对）。所以先看错误原文，别把所有红色提示都归成超时。</p>
+<h2 id="heading-4">怎样做一次有用的对照</h2>
+<p>如果客户端明确支持修改测试地址，可以按其文档，用项目推荐且用途明确的另一个检查地址做一次对照。保持节点、设备和连接方式不变，等待本轮结束，再重新访问同一个常用网页。</p>
+<ul>
+<li><strong>换检查地址后恢复，实际网页一直正常</strong>：把原测试目标或它的检查条件列为重点排查项，还不能断言全部线路都正常。</li>
+<li><strong>测试仍失败，常用网页也开始失败</strong>：继续查节点和基础连接，不能只靠修改测试地址解决。</li>
+<li><strong>日志提示域名解析或证书错误</strong>：按对应错误继续查，不要单纯延长等待时间。</li>
+</ul>
+<p>若没有改善，恢复原设置。不要只为了把颜色变绿就放宽所有成功条件，也不要同时粘贴一整套陌生配置。订阅管理的参数需要怎样保存、更新后是否保留，应向配置提供方确认。</p>
+<p>求助时说明发生时间、系统和客户端版本、被测节点、实际测试地址、错误原文，以及同一节点访问常用网页的结果。截图遮住完整订阅、节点密码和其他认证信息，比笼统说“全红了”更方便对方核查。</p>
+<p>资料核对日期：2026 年 11 月 7 日。本文没有对具体机场进行测速，不承诺某个测试地址或节点持续可用。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://prosperairport.blog/tags/clash/"># Clash</a><a href="https://prosperairport.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://prosperairport.blog/tags/proxy-access/"># 翻墙</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://prosperairport.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/">← 上一篇</a><a href="https://prosperairport.blog/posts/daily-2026-11-06-01-node-region-website-location-mismatch/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+</div><div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">延迟测试，其实有一个指定目的地</a><a class="level-2" href="#heading-1">先排除“网页根本没走这条节点”</a><a class="level-2" href="#heading-2">接着核对三件事</a><a class="level-2" href="#heading-3">“空白页”和“检查失败”要分开看</a><a class="level-2" href="#heading-4">怎样做一次有用的对照</a></nav></aside>
+</div></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场</a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧</a><a href="https://t.me/oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我</a></nav>
+<span>© 2026阿旺的博客</span>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://prosperairport.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://prosperairport.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://prosperairport.blog/pagefind/" base-url="https://prosperairport.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/2c31a664-e63e-41e3-a23d-56ac03af3384/","pageTitle":"测速一直超时，网页却正常：先查测试地址","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-307c7cfb-e43f-427e-96be-62becaa676a8","views":true,"viewsBase":0}</script>
+
+</body>
+</html>
