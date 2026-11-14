@@ -20,7 +20,7 @@
 <meta name="twitter:description" content="整理 Clash、Shadowrocket 等代理客户端的基础使用和故障排查方法。">
 <meta name="twitter:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
 
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://prosperairport.blog/categories/proxy-client-guides/#collection","@type":"CollectionPage","description":"整理 Clash、Shadowrocket 等代理客户端的基础使用和故障排查方法。","inLanguage":"zh-CN","mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","name":"代理提示 407，该填哪个账号？","position":1,"url":"https://prosperairport.blog/posts/daily-2026-11-13-01-proxy-407-authentication-check/"},{"@type":"ListItem","name":"代理启动提示端口被占用，怎么找到占用程序？","position":2,"url":"https://prosperairport.blog/posts/daily-2026-11-11-01-windows-proxy-port-in-use/"},{"@type":"ListItem","name":"只有一个应用用流量连不上，先查权限","position":3,"url":"https://prosperairport.blog/posts/daily-2026-11-08-01-iphone-single-app-cellular-data-permission/"},{"@type":"ListItem","name":"测速一直超时，网页却正常：先查测试地址","position":4,"url":"https://prosperairport.blog/posts/daily-2026-11-07-01-latency-test-timeout-but-browsing-works/"},{"@type":"ListItem","name":"公共 Wi-Fi 登录页不弹出，代理该怎么配合？","position":5,"url":"https://prosperairport.blog/posts/daily-2026-11-04-01-captive-wifi-login-before-proxy/"},{"@type":"ListItem","name":"切到直连后，为什么客户端里还有访问记录？","position":6,"url":"https://prosperairport.blog/posts/daily-2026-11-03-01-direct-mode-still-shows-connections/"},{"@type":"ListItem","name":"电脑时间不准，也会让代理连接失败吗？","position":7,"url":"https://prosperairport.blog/posts/daily-2026-11-01-01-proxy-certificate-error-device-clock/"},{"@type":"ListItem","name":"代理关了又连上，是谁在自动启动？","position":8,"url":"https://prosperairport.blog/posts/daily-2026-10-28-01-iphone-proxy-reconnect-automatic-triggers/"},{"@type":"ListItem","name":"自动选节点，为什么没换到延迟最低的那条？","position":9,"url":"https://prosperairport.blog/posts/daily-2026-10-27-01-auto-selection-latency-tolerance/"},{"@type":"ListItem","name":"换手机后，先找回买过的代理客户端","position":10,"url":"https://prosperairport.blog/posts/daily-2026-10-18-01-restore-purchased-proxy-client-on-new-iphone/"}]},"name":"客户端教程","url":"https://prosperairport.blog/categories/proxy-client-guides/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://prosperairport.blog/","name":"阿旺","position":1},{"@type":"ListItem","item":"https://prosperairport.blog/categories/proxy-client-guides/","name":"客户端教程","position":2}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://prosperairport.blog/categories/proxy-client-guides/#collection","@type":"CollectionPage","description":"整理 Clash、Shadowrocket 等代理客户端的基础使用和故障排查方法。","inLanguage":"zh-CN","mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","name":"群里发来的代理安装包，怎样核对？","position":1,"url":"https://prosperairport.blog/posts/daily-2026-11-14-01-verify-proxy-installer-sha256/"},{"@type":"ListItem","name":"代理提示 407，该填哪个账号？","position":2,"url":"https://prosperairport.blog/posts/daily-2026-11-13-01-proxy-407-authentication-check/"},{"@type":"ListItem","name":"代理启动提示端口被占用，怎么找到占用程序？","position":3,"url":"https://prosperairport.blog/posts/daily-2026-11-11-01-windows-proxy-port-in-use/"},{"@type":"ListItem","name":"只有一个应用用流量连不上，先查权限","position":4,"url":"https://prosperairport.blog/posts/daily-2026-11-08-01-iphone-single-app-cellular-data-permission/"},{"@type":"ListItem","name":"测速一直超时，网页却正常：先查测试地址","position":5,"url":"https://prosperairport.blog/posts/daily-2026-11-07-01-latency-test-timeout-but-browsing-works/"},{"@type":"ListItem","name":"公共 Wi-Fi 登录页不弹出，代理该怎么配合？","position":6,"url":"https://prosperairport.blog/posts/daily-2026-11-04-01-captive-wifi-login-before-proxy/"},{"@type":"ListItem","name":"切到直连后，为什么客户端里还有访问记录？","position":7,"url":"https://prosperairport.blog/posts/daily-2026-11-03-01-direct-mode-still-shows-connections/"},{"@type":"ListItem","name":"电脑时间不准，也会让代理连接失败吗？","position":8,"url":"https://prosperairport.blog/posts/daily-2026-11-01-01-proxy-certificate-error-device-clock/"},{"@type":"ListItem","name":"代理关了又连上，是谁在自动启动？","position":9,"url":"https://prosperairport.blog/posts/daily-2026-10-28-01-iphone-proxy-reconnect-automatic-triggers/"},{"@type":"ListItem","name":"自动选节点，为什么没换到延迟最低的那条？","position":10,"url":"https://prosperairport.blog/posts/daily-2026-10-27-01-auto-selection-latency-tolerance/"}]},"name":"客户端教程","url":"https://prosperairport.blog/categories/proxy-client-guides/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://prosperairport.blog/","name":"阿旺","position":1},{"@type":"ListItem","item":"https://prosperairport.blog/categories/proxy-client-guides/","name":"客户端教程","position":2}]}]}</script>
 
 <script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
 <link rel="stylesheet" href="https://prosperairport.blog/assets/theme/style.css">
@@ -89,6 +89,25 @@
 <span class="theme-list-count">本页 10 篇</span>
 </div>
 <section class="article-list landscape-entries" aria-label="文章列表"><article class="article-card landscape-entry">
+<div class="trail-waypoint" aria-hidden="true">
+<span class="card-index">
+</span>
+</div>
+<div class="trail-story">
+<div class="entry-categories"><a class="card-category" href="https://prosperairport.blog/categories/proxy-client-guides/">客户端教程</a></div>
+<h2>
+<a href="https://prosperairport.blog/posts/daily-2026-11-14-01-verify-proxy-installer-sha256/">群里发来的代理安装包，怎样核对？</a></h2>
+<p class="card-summary">在 Windows 安装代理客户端前，先到项目官方发布页找同一文件的 SHA-256，再用 PowerShell 算出手里文件的校验值。</p>
+<div class="trail-footer">
+<div class="card-meta">
+<span>阿旺</span>
+<time datetime="2026-11-14T09:05:55&#43;08:00">2026-11-14</time>
+</div>
+<a class="read-more" href="https://prosperairport.blog/posts/daily-2026-11-14-01-verify-proxy-installer-sha256/" aria-label="阅读群里发来的代理安装包，怎样核对？">继续行读 <span aria-hidden="true">↗</span>
+</a>
+</div>
+</div>
+</article><article class="article-card landscape-entry">
 <div class="trail-waypoint" aria-hidden="true">
 <span class="card-index">
 </span>
@@ -256,25 +275,6 @@
 <time datetime="2026-10-27T09:02:41&#43;08:00">2026-10-27</time>
 </div>
 <a class="read-more" href="https://prosperairport.blog/posts/daily-2026-10-27-01-auto-selection-latency-tolerance/" aria-label="阅读自动选节点，为什么没换到延迟最低的那条？">继续行读 <span aria-hidden="true">↗</span>
-</a>
-</div>
-</div>
-</article><article class="article-card landscape-entry">
-<div class="trail-waypoint" aria-hidden="true">
-<span class="card-index">
-</span>
-</div>
-<div class="trail-story">
-<div class="entry-categories"><a class="card-category" href="https://prosperairport.blog/categories/proxy-client-guides/">客户端教程</a></div>
-<h2>
-<a href="https://prosperairport.blog/posts/daily-2026-10-18-01-restore-purchased-proxy-client-on-new-iphone/">换手机后，先找回买过的代理客户端</a></h2>
-<p class="card-summary">换 iPhone 后，原来买过的代理客户端又显示价格，先核对购买账户和已购列表。本文以 Shadowrocket 为例，说明重新下载、隐藏项目与兼容性检查，以及安装找回后如何单独确认代理配置。</p>
-<div class="trail-footer">
-<div class="card-meta">
-<span>阿旺</span>
-<time datetime="2026-10-18T09:05:29&#43;08:00">2026-10-18</time>
-</div>
-<a class="read-more" href="https://prosperairport.blog/posts/daily-2026-10-18-01-restore-purchased-proxy-client-on-new-iphone/" aria-label="阅读换手机后，先找回买过的代理客户端">继续行读 <span aria-hidden="true">↗</span>
 </a>
 </div>
 </div>
