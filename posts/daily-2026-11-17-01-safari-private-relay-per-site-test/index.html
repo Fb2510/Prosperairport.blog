@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="landscape">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>只有一个网页提示关闭专用代理，该怎么办？ · 阿旺</title>
+<meta name="description" content="iPhone 上只有一个 Safari 网站提示关闭专用代理？查看如何使用显示 IP 地址做单站测试，再核对 Shadowrocket 请求记录。">
+<meta name="keywords" content="iCloud 专用代理, Safari 显示 IP 地址, Shadowrocket, iPhone 代理排查">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://prosperairport.blog/posts/daily-2026-11-17-01-safari-private-relay-per-site-test/">
+<meta property="og:title" content="只有一个网页提示关闭专用代理，该怎么办？">
+<meta property="og:description" content="iPhone 上只有一个 Safari 网站提示关闭专用代理？查看如何使用显示 IP 地址做单站测试，再核对 Shadowrocket 请求记录。">
+<meta property="og:url" content="https://prosperairport.blog/posts/daily-2026-11-17-01-safari-private-relay-per-site-test/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="阿旺">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg"><meta property="og:image:alt" content="阿旺">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="只有一个网页提示关闭专用代理，该怎么办？">
+<meta name="twitter:description" content="iPhone 上只有一个 Safari 网站提示关闭专用代理？查看如何使用显示 IP 地址做单站测试，再核对 Shadowrocket 请求记录。">
+<meta name="twitter:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<meta name="author" content="阿旺"><meta property="article:published_time" content="2026-11-17T09:01:58&#43;08:00"><meta property="article:modified_time" content="2026-11-17T09:02:38&#43;08:00"><meta property="article:tag" content="Shadowrocket"><meta property="article:tag" content="网络排障"><meta property="article:tag" content="翻墙">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://prosperairport.blog/posts/daily-2026-11-17-01-safari-private-relay-per-site-test/#article","@type":"BlogPosting","author":{"@type":"Person","name":"阿旺"},"dateModified":"2026-11-17T09:02:38+08:00","datePublished":"2026-11-17T09:01:58+08:00","description":"iPhone 上只有一个 Safari 网站提示关闭专用代理？查看如何使用显示 IP 地址做单站测试，再核对 Shadowrocket 请求记录。","headline":"只有一个网页提示关闭专用代理，该怎么办？","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://prosperairport.blog/posts/daily-2026-11-17-01-safari-private-relay-per-site-test/","@type":"WebPage"},"url":"https://prosperairport.blog/posts/daily-2026-11-17-01-safari-private-relay-per-site-test/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://prosperairport.blog/","name":"阿旺","position":1},{"@type":"ListItem","item":"https://prosperairport.blog/posts/daily-2026-11-17-01-safari-private-relay-per-site-test/","name":"只有一个网页提示关闭专用代理，该怎么办？","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/search.css"><script defer src="https://prosperairport.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/layouts.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/effects.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/reader.css">
+<link rel="icon" href="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/artalk.css"><script defer src="https://prosperairport.blog/assets/theme/artalk.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/theme.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/reader.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/viewer.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://prosperairport.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3YZ8BC7G6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Q3YZ8BC7G6');
+</script>
+
+<script defer src="https://prosperairport.blog/assets/xblog/google-analytics.js" data-xblog-google-analytics="G-Q3YZ8BC7G6" data-site-hosts="prosperairport.blog,www.prosperairport.blog"></script></head>
+
+<body class="reader-page theme-landscape article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://prosperairport.blog/"><img src="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg" alt="" width="38" height="38"><span>阿旺</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://prosperairport.blog/">首页</a></nav>
+<a class="search-toggle" href="https://prosperairport.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="page-viewport article-viewport"><div class="page-scroll article-scroll">
+<main id="main" tabindex="-1" class="landscape-workspace theme-workspace theme-article">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://prosperairport.blog/">阿旺</a></li><li><span aria-current="page">只有一个网页提示关闭专用代理，该怎么办？</span></li></ol></nav>
+
+
+<div class="landscape-reading"><div class="landscape-scenic-strip" aria-hidden="true">
+<svg class="landscape-scene" viewBox="0 0 1440 360" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+<circle class="landscape-sun" cx="1100" cy="92" r="40" fill="var(--sun)"/>
+<path d="M0 246 160 149 263 210 465 65 628 189 810 96 993 211 1199 82 1440 212v148H0Z" fill="var(--mountain-far)"/>
+<path d="m0 278 167-49 154 51 267-125 148 113 178-71 153 77 150-133 223 125v94H0Z" fill="var(--mountain-mid)"/>
+<path d="M0 302c164-66 246 18 374-16s237 38 369 12 292-30 383 2 212-31 314-20v80H0Z" fill="var(--mountain-near)"/>
+<path d="M804 298c-77 5-60 17 14 17s77 16-50 19-138 23-80 26" fill="none" stroke="var(--river)" stroke-width="5" opacity=".7"/>
+<path d="m974 97 12-5 12 5m20-13 9-4 9 4" fill="none" stroke="var(--mountain-mid)" stroke-width="2"/>
+</svg></div><div class="landscape-journal">
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>
+行走与记述</div>
+<h1 data-pagefind-meta="title">只有一个网页提示关闭专用代理，该怎么办？</h1>
+<div class="metadata" data-pagefind-ignore><span>阿旺</span><time datetime="2026-11-17T09:01:58&#43;08:00">2026-11-17</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://prosperairport.blog/categories/proxy-client-guides/">客户端教程</a></div>
+</header>
+<div class="prose"><p>如果 iPhone 上只有一个网站提示关闭 iCloud 专用代理，可以先在 Safari 对这个网站临时选择「显示 IP 地址」，再试一次。苹果说明，靠 IP 地址过滤访问或限制请求次数的网站，有时会拦下经过专用代理的访问。遇到这种提示，先做单站测试，保留其他网站的设置。<a href="https://support.apple.com/en-us/102022">苹果的单站设置说明</a></p>
+<h2 id="heading">确认提示说的是哪一个代理</h2>
+<p>iCloud 专用代理是 iCloud+ 的一项隐私功能，主要保护 Safari 浏览。它使用两段中继来处理访问，让目的站点看到中继提供的 IP 地址。Shadowrocket 则是可按规则转发请求的客户端。按苹果的开发者说明，实际由 VPN 或应用代理扩展处理的流量不使用 iCloud 专用代理。手机同时装有客户端和开启专用代理时，可用连接记录核对出错请求实际经过了哪条线路。<a href="https://support.apple.com/en-us/102602">苹果的专用代理介绍</a> <a href="https://developer.apple.com/videos/play/wwdc2021/10096/?time=323">苹果开发者说明</a> <a href="https://apps.apple.com/us/app/shadowrocket/id932747118">Shadowrocket 的功能说明</a></p>
+<h2 id="heading-1">只对当前网站做一次对比</h2>
+<ol>
+<li>用 Safari 打开提示出错的网页，先记下原来的提示。确认网址是你本来要访问的站点。测试期间保持同一个 Wi-Fi 或移动网络，也先保留客户端原来的节点和分流设置。</li>
+<li>点 Safari 地址栏旁的页面菜单，再选择「显示 IP 地址（Show IP Address）」。这会让这个网站暂时绕开 iCloud 专用代理。苹果提醒，关闭对这个网站的专用代理后，你的网络服务提供商也可能知道你正在访问哪个网站。愿意为这次测试暴露这些信息时再继续。<a href="https://support.apple.com/en-us/102022">苹果的操作步骤和隐私说明</a></li>
+<li>重试同一网页，观察刚才的提示是否消失。如果页面恢复了，可以把这次测试记为「单站关闭专用代理后恢复」。网站为什么限制原来的访问，仍以站点的实际提示或客服答复为准。<a href="https://support.apple.com/en-us/102022">苹果关于站点 IP 限制的说明</a></li>
+</ol>
+<h2 id="heading-2">没有选项，或者改完依然打不开</h2>
+<ul>
+<li><strong>菜单里没有「显示 IP 地址」。</strong> 先核对自己是否有 iCloud+，以及专用代理是否在当前网络启用。对于连着 Wi-Fi 的 iPhone，可在「设置 → Wi-Fi」点当前网络旁的信息按钮，查看「限制 IP 地址跟踪」。如果专用代理已启用却仍看不到单站选项，苹果建议更新系统后再试。<a href="https://support.apple.com/en-us/102602">苹果的功能条件</a> <a href="https://support.apple.com/en-us/102022">苹果的网络设置说明</a></li>
+<li><strong>仍然提示无法访问。</strong> 记下新旧报错和时间。若同时开着 Shadowrocket，在客户端可见的请求记录中查同一时间和域名。有匹配的记录时，先确定这次请求走的规则或线路，再按报错继续排查。<a href="https://apps.apple.com/us/app/shadowrocket/id932747118">Shadowrocket 的请求记录说明</a></li>
+</ul>
+<p>资料核对日期为 2026 年 11 月 17 日。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://prosperairport.blog/tags/shadowrocket/"># Shadowrocket</a><a href="https://prosperairport.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://prosperairport.blog/tags/proxy-access/"># 翻墙</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://prosperairport.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/">← 上一篇</a><a href="https://prosperairport.blog/posts/daily-2026-11-16-01-proxy-no-logs-policy-check/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+</div><div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">确认提示说的是哪一个代理</a><a class="level-2" href="#heading-1">只对当前网站做一次对比</a><a class="level-2" href="#heading-2">没有选项，或者改完依然打不开</a></nav></aside>
+</div></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场</a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧</a><a href="https://t.me/oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我</a></nav>
+<span>© 2026阿旺的博客</span>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://prosperairport.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://prosperairport.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://prosperairport.blog/pagefind/" base-url="https://prosperairport.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/8946fceb-e527-4c03-9825-780a52f4de76/","pageTitle":"只有一个网页提示关闭专用代理，该怎么办？","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-307c7cfb-e43f-427e-96be-62becaa676a8","views":true,"viewsBase":0}</script>
+
+</body>
+</html>
