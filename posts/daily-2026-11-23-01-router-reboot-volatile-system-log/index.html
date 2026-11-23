@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="landscape">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>软路由重启后，故障日志还能找回吗？ · 阿旺</title>
+<meta name="description" content="软路由代理故障一重启日志就没了？了解 OpenWrt 内存日志的保存范围，重启前从 LuCI 复制记录，重启后核对已有日志输出。">
+<meta name="keywords" content="OpenWrt 系统日志, 软路由重启, 代理故障记录, 日志保存">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://prosperairport.blog/posts/daily-2026-11-23-01-router-reboot-volatile-system-log/">
+<meta property="og:title" content="软路由重启后，故障日志还能找回吗？">
+<meta property="og:description" content="软路由代理故障一重启日志就没了？了解 OpenWrt 内存日志的保存范围，重启前从 LuCI 复制记录，重启后核对已有日志输出。">
+<meta property="og:url" content="https://prosperairport.blog/posts/daily-2026-11-23-01-router-reboot-volatile-system-log/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="阿旺">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg"><meta property="og:image:alt" content="阿旺">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="软路由重启后，故障日志还能找回吗？">
+<meta name="twitter:description" content="软路由代理故障一重启日志就没了？了解 OpenWrt 内存日志的保存范围，重启前从 LuCI 复制记录，重启后核对已有日志输出。">
+<meta name="twitter:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<meta name="author" content="阿旺"><meta property="article:published_time" content="2026-11-23T09:08:28&#43;08:00"><meta property="article:modified_time" content="2026-11-23T09:08:31&#43;08:00"><meta property="article:tag" content="软路由"><meta property="article:tag" content="网络排障"><meta property="article:tag" content="翻墙">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://prosperairport.blog/posts/daily-2026-11-23-01-router-reboot-volatile-system-log/#article","@type":"BlogPosting","author":{"@type":"Person","name":"阿旺"},"dateModified":"2026-11-23T09:08:31+08:00","datePublished":"2026-11-23T09:08:28+08:00","description":"软路由代理故障一重启日志就没了？了解 OpenWrt 内存日志的保存范围，重启前从 LuCI 复制记录，重启后核对已有日志输出。","headline":"软路由重启后，故障日志还能找回吗？","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://prosperairport.blog/posts/daily-2026-11-23-01-router-reboot-volatile-system-log/","@type":"WebPage"},"url":"https://prosperairport.blog/posts/daily-2026-11-23-01-router-reboot-volatile-system-log/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://prosperairport.blog/","name":"阿旺","position":1},{"@type":"ListItem","item":"https://prosperairport.blog/posts/daily-2026-11-23-01-router-reboot-volatile-system-log/","name":"软路由重启后，故障日志还能找回吗？","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/search.css"><script defer src="https://prosperairport.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/layouts.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/effects.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/reader.css">
+<link rel="icon" href="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/artalk.css"><script defer src="https://prosperairport.blog/assets/theme/artalk.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/theme.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/reader.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/viewer.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://prosperairport.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3YZ8BC7G6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Q3YZ8BC7G6');
+</script>
+
+<script defer src="https://prosperairport.blog/assets/xblog/google-analytics.js" data-xblog-google-analytics="G-Q3YZ8BC7G6" data-site-hosts="prosperairport.blog,www.prosperairport.blog"></script></head>
+
+<body class="reader-page theme-landscape article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://prosperairport.blog/"><img src="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg" alt="" width="38" height="38"><span>阿旺</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://prosperairport.blog/">首页</a></nav>
+<a class="search-toggle" href="https://prosperairport.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="page-viewport article-viewport"><div class="page-scroll article-scroll">
+<main id="main" tabindex="-1" class="landscape-workspace theme-workspace theme-article">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://prosperairport.blog/">阿旺</a></li><li><span aria-current="page">软路由重启后，故障日志还能找回吗？</span></li></ol></nav>
+
+
+<div class="landscape-reading"><div class="landscape-scenic-strip" aria-hidden="true">
+<svg class="landscape-scene" viewBox="0 0 1440 360" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+<circle class="landscape-sun" cx="1100" cy="92" r="40" fill="var(--sun)"/>
+<path d="M0 246 160 149 263 210 465 65 628 189 810 96 993 211 1199 82 1440 212v148H0Z" fill="var(--mountain-far)"/>
+<path d="m0 278 167-49 154 51 267-125 148 113 178-71 153 77 150-133 223 125v94H0Z" fill="var(--mountain-mid)"/>
+<path d="M0 302c164-66 246 18 374-16s237 38 369 12 292-30 383 2 212-31 314-20v80H0Z" fill="var(--mountain-near)"/>
+<path d="M804 298c-77 5-60 17 14 17s77 16-50 19-138 23-80 26" fill="none" stroke="var(--river)" stroke-width="5" opacity=".7"/>
+<path d="m974 97 12-5 12 5m20-13 9-4 9 4" fill="none" stroke="var(--mountain-mid)" stroke-width="2"/>
+</svg></div><div class="landscape-journal">
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>
+行走与记述</div>
+<h1 data-pagefind-meta="title">软路由重启后，故障日志还能找回吗？</h1>
+<div class="metadata" data-pagefind-ignore><span>阿旺</span><time datetime="2026-11-23T09:08:28&#43;08:00">2026-11-23</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://prosperairport.blog/categories/router-network-troubleshooting/">软路由与排障</a></div>
+</header>
+<div class="prose"><p>代理突然断开，重启软路由后恢复了，再去找故障日志却只剩开机记录。如果看的是 OpenWrt 的默认系统日志，原来那部分记录可能已经随重启丢失。下次故障发生时，可以先把日志复制到电脑，再重启。本文以 OpenWrt 24.10 使用的默认日志组件为例。<a href="https://github.com/openwrt/openwrt/blob/openwrt-24.10/package/system/ubox/Makefile">该版本的日志组件</a> <a href="https://github.com/openwrt/ubox/blob/85f1053019caf4cd333795760950235ee4529ba7/log/syslog.c">日志缓冲实现</a></p>
+<h2 id="heading">为什么旧记录会消失</h2>
+<p>这套系统日志把记录放在内存缓冲区里。内存需要设备持续运行才能保留内容，重启后会重新建立缓冲区。缓冲区大小也有限，新记录不断写入时，旧记录会逐渐被覆盖。因此，设备还没重启，也可能已经看不到较早的记录。<a href="https://github.com/openwrt/ubox/blob/85f1053019caf4cd333795760950235ee4529ba7/log/syslog.c">内存分配与旧记录覆盖实现</a></p>
+<p>如果此前配置过日志写文件，或发送到另一台设备，可以到相应位置查找。OpenWrt 的启动脚本把日志缓冲、写文件和远程发送作为不同部分处理。代理插件自己保存的日志，也要看插件使用的文件和保留方式。<a href="https://github.com/openwrt/openwrt/blob/openwrt-24.10/package/system/ubox/files/log.init">日志文件与远程发送配置实现</a></p>
+<h2 id="heading-1">重启前，先保存这次故障</h2>
+<ol>
+<li>用能打开管理页的电脑登录软路由，进入「状态 → 系统日志」。在页面文本框中复制当前内容，粘贴到电脑上的文本文件里保存。文件名可以写上日期和时间，方便以后查找。<a href="https://github.com/openwrt/luci/blob/openwrt-24.10/modules/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json">LuCI 的系统日志菜单</a> <a href="https://github.com/openwrt/luci/blob/openwrt-24.10/modules/luci-mod-status/htdocs/luci-static/resources/view/status/syslog.js">日志文本框实现</a></li>
+<li>再看代理插件自己的日志页面，保存与故障时间对应的内容。系统日志可能只显示插件启动或退出，具体连接失败还可能记在插件页面。以自己安装的插件为准。</li>
+<li>另记下故障发生时间、当时访问的目标、使用的节点，以及准备重启的时间。重启后如果恢复，也补记恢复时间。把这些信息和日志放在一起，就能对照故障前后发生了什么。</li>
+</ol>
+<p>保存后，在电脑上重新打开文件，确认文字确实已经留下。然后再做原本准备进行的重启或其他排查操作。</p>
+<h2 id="heading-2">已经重启了，先查还有哪些记录</h2>
+<p>先查看当前系统日志最早一条记录的时间，再检查此前是否有启用日志文件或远程接收。若原来只有内存日志，重启前的缓冲记录通常已经无法从当前缓冲区取得。此时可以保留新启动过程的日志，观察问题能否再次出现，再按上面的步骤记录。<a href="https://github.com/openwrt/ubox/blob/85f1053019caf4cd333795760950235ee4529ba7/log/syslog.c">日志缓冲的初始化方式</a></p>
+<p>如果故障一发生就连管理页也打不开，手动复制会受到限制。希望跨重启或突然断电后继续查证时，可以按固件说明配置合适的日志文件存储或远程日志接收，并验证接收端真的留下了记录。<a href="https://github.com/openwrt/openwrt/blob/openwrt-24.10/package/system/ubox/files/log.init">OpenWrt 的日志输出配置</a></p>
+<p>资料核对日期为 2026 年 11 月 23 日。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://prosperairport.blog/tags/soft-router/"># 软路由</a><a href="https://prosperairport.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://prosperairport.blog/tags/proxy-access/"># 翻墙</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://prosperairport.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/">← 上一篇</a><a href="https://prosperairport.blog/posts/daily-2026-11-22-01-windows-tun-service-permission/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+</div><div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">为什么旧记录会消失</a><a class="level-2" href="#heading-1">重启前，先保存这次故障</a><a class="level-2" href="#heading-2">已经重启了，先查还有哪些记录</a></nav></aside>
+</div></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场</a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧</a><a href="https://t.me/oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我</a></nav>
+<span>© 2026阿旺的博客</span>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://prosperairport.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://prosperairport.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://prosperairport.blog/pagefind/" base-url="https://prosperairport.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/78d51d8f-2b2b-47be-ae82-c91ef5b8a405/","pageTitle":"软路由重启后，故障日志还能找回吗？","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-307c7cfb-e43f-427e-96be-62becaa676a8","views":true,"viewsBase":0}</script>
+
+</body>
+</html>
