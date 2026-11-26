@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="landscape">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>配置提示「proxy not found」，该改哪一处？ · 阿旺</title>
+<meta name="description" content="面向使用 Mihomo 内核的 Clash 类客户端新手，解释配置加载时 proxy not found 的含义，按报错规则核对目标名称，区分自定义规则与原始订阅问题，并验证修正结果。">
+<meta name="keywords" content="proxy not found,配置加载失败,代理组名称,规则排查">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://prosperairport.blog/posts/daily-2026-11-26-01-rule-proxy-name-not-found/">
+<meta property="og:title" content="配置提示「proxy not found」，该改哪一处？">
+<meta property="og:description" content="面向使用 Mihomo 内核的 Clash 类客户端新手，解释配置加载时 proxy not found 的含义，按报错规则核对目标名称，区分自定义规则与原始订阅问题，并验证修正结果。">
+<meta property="og:url" content="https://prosperairport.blog/posts/daily-2026-11-26-01-rule-proxy-name-not-found/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="阿旺">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg"><meta property="og:image:alt" content="阿旺">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="配置提示「proxy not found」，该改哪一处？">
+<meta name="twitter:description" content="面向使用 Mihomo 内核的 Clash 类客户端新手，解释配置加载时 proxy not found 的含义，按报错规则核对目标名称，区分自定义规则与原始订阅问题，并验证修正结果。">
+<meta name="twitter:image" content="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<meta name="author" content="阿旺"><meta property="article:published_time" content="2026-11-26T09:07:08&#43;08:00"><meta property="article:modified_time" content="2026-11-26T09:07:10&#43;08:00"><meta property="article:tag" content="Clash"><meta property="article:tag" content="网络排障">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://prosperairport.blog/posts/daily-2026-11-26-01-rule-proxy-name-not-found/#article","@type":"BlogPosting","author":{"@type":"Person","name":"阿旺"},"dateModified":"2026-11-26T09:07:10+08:00","datePublished":"2026-11-26T09:07:08+08:00","description":"面向使用 Mihomo 内核的 Clash 类客户端新手，解释配置加载时 proxy not found 的含义，按报错规则核对目标名称，区分自定义规则与原始订阅问题，并验证修正结果。","headline":"配置提示「proxy not found」，该改哪一处？","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://prosperairport.blog/posts/daily-2026-11-26-01-rule-proxy-name-not-found/","@type":"WebPage"},"url":"https://prosperairport.blog/posts/daily-2026-11-26-01-rule-proxy-name-not-found/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://prosperairport.blog/","name":"阿旺","position":1},{"@type":"ListItem","item":"https://prosperairport.blog/posts/daily-2026-11-26-01-rule-proxy-name-not-found/","name":"配置提示「proxy not found」，该改哪一处？","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/search.css"><script defer src="https://prosperairport.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/layouts.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/effects.css"><link rel="stylesheet" href="https://prosperairport.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/reader.css">
+<link rel="icon" href="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg">
+<link rel="stylesheet" href="https://prosperairport.blog/assets/theme/artalk.css"><script defer src="https://prosperairport.blog/assets/theme/artalk.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/theme.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/reader.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/viewer.js"></script>
+<script defer src="https://prosperairport.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://prosperairport.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3YZ8BC7G6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Q3YZ8BC7G6');
+</script>
+
+<script defer src="https://prosperairport.blog/assets/xblog/google-analytics.js" data-xblog-google-analytics="G-Q3YZ8BC7G6" data-site-hosts="prosperairport.blog,www.prosperairport.blog"></script></head>
+
+<body class="reader-page theme-landscape article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://prosperairport.blog/"><img src="https://prosperairport.blog/assets/media/83618d47-92fd-4991-8b0d-d74e6020af5d.jpg" alt="" width="38" height="38"><span>阿旺</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://prosperairport.blog/">首页</a></nav>
+<a class="search-toggle" href="https://prosperairport.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="page-viewport article-viewport"><div class="page-scroll article-scroll">
+<main id="main" tabindex="-1" class="landscape-workspace theme-workspace theme-article">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://prosperairport.blog/">阿旺</a></li><li><span aria-current="page">配置提示「proxy not found」，该改哪一处？</span></li></ol></nav>
+
+
+<div class="landscape-reading"><div class="landscape-scenic-strip" aria-hidden="true">
+<svg class="landscape-scene" viewBox="0 0 1440 360" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+<circle class="landscape-sun" cx="1100" cy="92" r="40" fill="var(--sun)"/>
+<path d="M0 246 160 149 263 210 465 65 628 189 810 96 993 211 1199 82 1440 212v148H0Z" fill="var(--mountain-far)"/>
+<path d="m0 278 167-49 154 51 267-125 148 113 178-71 153 77 150-133 223 125v94H0Z" fill="var(--mountain-mid)"/>
+<path d="M0 302c164-66 246 18 374-16s237 38 369 12 292-30 383 2 212-31 314-20v80H0Z" fill="var(--mountain-near)"/>
+<path d="M804 298c-77 5-60 17 14 17s77 16-50 19-138 23-80 26" fill="none" stroke="var(--river)" stroke-width="5" opacity=".7"/>
+<path d="m974 97 12-5 12 5m20-13 9-4 9 4" fill="none" stroke="var(--mountain-mid)" stroke-width="2"/>
+</svg></div><div class="landscape-journal">
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>
+行走与记述</div>
+<h1 data-pagefind-meta="title">配置提示「proxy not found」，该改哪一处？</h1>
+<div class="metadata" data-pagefind-ignore><span>阿旺</span><time datetime="2026-11-26T09:07:08&#43;08:00">2026-11-26</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://prosperairport.blog/categories/proxy-client-guides/">客户端教程</a></div>
+</header>
+<div class="prose"><p>加载代理配置时出现 <code>proxy [某个名称] not found</code>，先把报错中的名称与配置里的节点、代理组名称逐字对照。若提示还带着 <code>rules[...]</code> 和一条规则，重点检查这条规则引用的目标是否存在，再重新加载验证。</p>
+<p>本文针对采用 Mihomo 内核的 Clash 类客户端，处理的是配置里的引用关系。内核就是客户端实际读取配置、处理代理的部分。操作需要客户端允许查看或编辑配置；不同系统、客户端的编辑入口有差别，下面不依赖某个固定菜单。只有订阅链接、无法查看配置时，也可以按本文方法整理错误，交给配置提供者处理。</p>
+<h2 id="heading">这条提示在说什么？</h2>
+<p>规则决定某类访问交给谁处理；代理组是用来选择节点或其他出口的分组。配置中的名称，就是规则查找目标时使用的依据。</p>
+<p>本次核对的 Mihomo 项目代码，会在解析规则时查找目标名称，找不到便返回包含 <code>proxy [...] not found</code> 的错误。因此，这种带规则上下文的提示，首先指向名称引用问题。<a href="https://github.com/MetaCubeX/mihomo/blob/Meta/config/config.go">查看项目的规则解析代码</a>（2026 年 11 月 26 日核对）。</p>
+<p>如果实际错误是 <code>rule set [...] not found</code> 或 <code>sub-rule [...] not found</code>，要按对应对象继续查，不能直接套用下面的代理组改名方法。</p>
+<h2 id="heading-1">先找到报错规则，再找它要引用的名称</h2>
+<p>开始前保留当前配置和此前能正常加载的版本。只在副本中修改，避免失去可恢复的原文件。</p>
+<ol>
+<li><strong>保存完整错误文字。</strong> 记录它列出的规则内容与缺失名称。<code>rules[...]</code> 中的数字用于标识规则，定位时优先搜索完整规则文字，避免把它误当成编辑器的文件行号。</li>
+<li><strong>在待加载配置里搜索缺失名称。</strong> 看它只是出现在规则里，还是确实有对应的节点或代理组定义。</li>
+<li><strong>对照实际名称。</strong> 检查大小写、空格、中文标点及表情符号，保留完整名称。不要只凭“看起来差不多”判断相同。</li>
+</ol>
+<p>代理组的 <code>name</code> 就是组名，官方文档也说明了组内可以引用出站代理或其他策略组。<a href="https://wiki.metacubex.one/config/proxy-groups/">查看代理组字段说明</a>（2026 年 11 月 26 日核对）。</p>
+<p>如果客户端还会通过自定义规则、扩展配置或脚本生成最终配置，优先检查实际送给内核加载的结果。找不到这份结果时，先记录有哪些额外设置，请维护者协助确认，避免改错文件。</p>
+<h2 id="heading-2">用一个示例看懂怎样修正</h2>
+<p><strong>以下是填写示例，名称和域名都用于说明关系，不是本站故障日志，也不是可整份导入的配置。</strong></p>
+<p>假设当前已有一个代理组，名称为 <code>日常选择</code>，你添加的规则却是：</p>
+<p><code>DOMAIN,example.com,旧分组</code></p>
+<p>这条示例规则将完整域名 <code>example.com</code> 的访问交给 <code>旧分组</code>。如果配置没有这个目标，名称就对不上。规则字段与 DOMAIN 的含义可对照<a href="https://wiki.metacubex.one/config/rules/">官方路由规则说明</a>（2026 年 11 月 26 日核对）。</p>
+<p>先确认这条规则原本就应该使用 <code>日常选择</code>，再把该条规则中的目标改成：</p>
+<p><code>DOMAIN,example.com,日常选择</code></p>
+<p>这是修正一处已确认的引用。若你并不知道规则应该走哪个组，先询问配置提供者；随便填入一个存在的名称，虽然可能通过检查，却可能改变实际访问方式。</p>
+<h2 id="heading-3">自己加的规则，与服务商下发的配置分别处理</h2>
+<table>
+<thead>
+<tr>
+<th>情况</th>
+<th>可以先做什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>刚添加一条自定义规则就报错</td>
+<td>备份后暂时撤回这条新增项，重新加载；能恢复时，再核对该项的目标名称</td>
+</tr>
+<tr>
+<td>自己改过代理组名称</td>
+<td>对照修改前后内容，检查仍引用旧名称的相关规则，逐项确认用途</td>
+</tr>
+<tr>
+<td>服务商提供的原配置直接报错</td>
+<td>提供错误文字、客户端和内核版本，请对方检查下发内容与适配要求</td>
+</tr>
+<tr>
+<td>原配置与额外扩展合并后才报错</td>
+<td>保留两部分内容，请扩展的维护者核对最终生成结果</td>
+</tr>
+</tbody>
+</table>
+<p>不要用批量替换把所有同名文字一遍改掉。相同文字可能出现在备注或其他配置项里，需要先确认它是不是正在出错的引用。</p>
+<h2 id="heading-4">最后核对两件事</h2>
+<p>保存副本后，使用客户端提供的配置检查或加载功能，确认原来的名称错误已经消失。如果出现新错误，保留新提示继续核对；遇到不确定的改动，可以恢复备份。</p>
+<p>加载成功后，再检查相关代理组的实际选择，并访问原本需要使用的网站。配置能加载，说明通过了这一步检查；实际连接表现仍要单独验证。</p>
+<p>求助时提供经过遮挡的错误文字、缺失名称、相关规则片段、客户端及内核版本即可。配置可能包含订阅地址和节点凭据，分享前只保留与名称对应关系有关的部分。</p>
+<p>资料核对日期：2026 年 11 月 26 日。本文依据公开文档和项目代码整理，未进行机场连接实测。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://prosperairport.blog/tags/clash/"># Clash</a><a href="https://prosperairport.blog/tags/network-troubleshooting/"># 网络排障</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://prosperairport.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/">← 上一篇</a><a href="https://prosperairport.blog/posts/daily-2026-11-25-01-streaming-unlock-trial-check/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+</div><div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">这条提示在说什么？</a><a class="level-2" href="#heading-1">先找到报错规则，再找它要引用的名称</a><a class="level-2" href="#heading-2">用一个示例看懂怎样修正</a><a class="level-2" href="#heading-3">自己加的规则，与服务商下发的配置分别处理</a><a class="level-2" href="#heading-4">最后核对两件事</a></nav></aside>
+</div></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场</a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧</a><a href="https://t.me/oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我</a></nav>
+<span>© 2026阿旺的博客</span>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://prosperairport.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://prosperairport.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://prosperairport.blog/pagefind/" base-url="https://prosperairport.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/061bbd3f-98fc-4255-8a1b-d12c48eadd8a/","pageTitle":"配置提示「proxy not found」，该改哪一处？","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-307c7cfb-e43f-427e-96be-62becaa676a8","views":true,"viewsBase":0}</script>
+
+</body>
+</html>
